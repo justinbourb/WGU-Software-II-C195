@@ -19,7 +19,7 @@ This is a JavaFX GUI application for WGU Software II C195. The application model
         and hit ok.  
     b. Press ok and apply.  JavaFX is ready to use.
 ## Setting up the database
-1. Download the platform-independent JDBC connector file from https://dev.mysql.com/downloads/connector/j/ and extract the zip file. (This will require creating an Oracle account.) Inside this file is the “mysql-connector” JAR file.
+1. Download the platform-independent JDBC connector file from https://dev.mysql.com/downloads/connector/j/ and extract the zip file. Inside this file is the “mysql-connector” JAR file.
  
 2. Goto File -> Project Structure -> Libraries -> click the + to add a new library  
     a. Select Java -> Browse to your database connector file -> select the jar file  
