@@ -11,13 +11,12 @@ import javafx.stage.Stage;
 import javax.swing.text.Utilities;
 import java.sql.SQLException;
 
-public class MainController extends Application {
+public class mainLauncher extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/View/mainView.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
@@ -25,6 +24,6 @@ public class MainController extends Application {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         DBConnection.startConnection();
         launch(args);
-        //DBConnection.closeConnection();
+        DBConnection.closeConnection();
     }
 }

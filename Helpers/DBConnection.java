@@ -29,6 +29,19 @@ public class DBConnection {
 
     /**This function starts the database connection.
      * @return connection - a database connection*/
+//    public static Connection startConnection() throws ClassNotFoundException {
+//        //try with resources close connections automatically
+//        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password);){
+//            Class.forName(MYSQLJBCDriver);
+//            System.out.println("Connection successful");
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        } catch (ClassNotFoundException e) {
+//            System.out.println(e.getMessage());
+//        }
+//        return connection;
+//    }
+
     public static Connection startConnection() throws ClassNotFoundException {
         try {
             Class.forName(MYSQLJBCDriver);
