@@ -9,7 +9,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="276.0" prefWidth="477.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.mainController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="600.0" text="Welcome to the desktop scheduling application.">
+      <Label fx:id = "welcomeLabel" alignment="CENTER" contentDisplay="CENTER" prefWidth="600.0" text="Welcome to the desktop scheduling application.">
          <font>
             <Font size="18.0" />
          </font>
