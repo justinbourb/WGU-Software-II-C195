@@ -17,7 +17,7 @@ import DAO.read;
 import static DAO.read.readData;
 
 /** This class controls the mainView.fxml */
-public class mainController  implements Initializable {
+public class loginController  implements Initializable {
 
     @FXML
     private TextField passwordTextField;
