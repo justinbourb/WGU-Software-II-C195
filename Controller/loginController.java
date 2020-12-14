@@ -41,22 +41,10 @@ public class loginController  implements Initializable {
     private Label locationLabel;
 
     @FXML
-    private TextArea errorTextArea;
+    private Label errorLabel;
     
     private Boolean isFrench = false;
     
-    /*Requirements:
-    1.  Create a log-in form with the following capabilities:
-
-complete - open next gui page after login •  accepts a user ID and password and provides an appropriate error message
-
-incomplete - show as label on gui •  determines the user’s location (i.e., ZoneId) and displays it in a label on the log-in form
-
- complete •  displays the log-in form in English or French based on the user’s computer language setting to translate all the text, labels, buttons, and errors on the form
-
-incomplete - show as label on gui •  automatically translates error control messages into English or French based on the user’s computer language setting
-*/
-
     /**
      * This function controls the submitButton button.  Text is displayed
      * in English or French based on the user's location.
@@ -70,29 +58,35 @@ incomplete - show as label on gui •  automatically translates error control me
         String column = "*";
         String table = "users";
         String where = "User_Name = '" + name + "'";
-        errorTextArea.clear();
-        errorTextArea.setVisible(false);
+        errorLabel.setText("");
 
 
         ResultSet results = readData(column, table, where);
         //Calling results.next() "consumes" the next result, so only use this method as needed
         //How to peek at or check this value?
-        while(results.next()) {
+        if(results.next()) {
             String stored_name = results.getString("User_Name");
             String stored_password = results.getString("Password");
             //if username and password match, log in
             if (stored_password.equals(password)) {
                 String resourceURL = "/View/mainView.fxml";
                 switchStage.switchStage(actionEvent, resourceURL);
-            //else print errors
+            //print errors when password is wrong
             } else {
-                errorTextArea.setVisible(true);
-                if (isFrench) {
-                    errorTextArea.appendText("Le nom d'utilisateur ou le mot de passe ne correspond pas.");
-                } else {
-                    errorTextArea.appendText("The user name or password did not match.");
-                }
+                setErrors();
             }
+        //print errors when no user found
+        } else {
+            setErrors();
+        }
+    }
+
+    /** This function shows the login errors to the gui in English or French */
+    private void setErrors() {
+        if (isFrench) {
+            errorLabel.setText("Le nom d'utilisateur ou le mot de passe ne correspond pas.");
+        } else {
+            errorLabel.setText("The user name or password did not match.");
         }
     }
     
@@ -111,7 +105,6 @@ incomplete - show as label on gui •  automatically translates error control me
             welcomeLabel.setText("Bienvenue dans l'application de planification de bureau");
             submitButton.setText("soumettre");
             isFrench = true;
-            
         }
     }
 
