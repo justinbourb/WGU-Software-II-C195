@@ -1,6 +1,7 @@
   
 package Controller;
 
+import com.sun.scenario.effect.impl.state.AccessHelper;
 import com.sun.tools.jconsole.JConsoleContext;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,13 +11,16 @@ import javafx.fxml.Initializable;
 
 import java.io.DataOutput;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 import Helpers.switchStage;
 import DAO.read;
 
 import static DAO.read.readData;
+
 
 /* TODO
 *1) access DB logic
@@ -82,6 +86,7 @@ public class mainController implements Initializable {
     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-    //fill customer table view
+        //fill customer table view
+    }
 
 }

@@ -21,7 +21,7 @@ public class switchStage {
     *@param resourceURL, a string pointing to a .fxml file
     */
     @FXML
-    static void switchStage(ActionEvent event, String resourceURL) throws IOException {
+    public static void switchStage(ActionEvent event, String resourceURL) throws IOException {
         stage = (Stage)((Button)event.getSource()).getScene().getWindow();
         scene = load(switchStage.class.getResource(resourceURL));
         stage.setScene(new Scene(scene));
