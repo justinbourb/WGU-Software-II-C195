@@ -1,24 +1,20 @@
 package Controller;
 
-import Helpers.switchStage;
-import com.sun.tools.jconsole.JConsoleContext;
+import Helpers.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.fxml.Initializable;
 
-import java.io.DataOutput;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import DAO.read;
 
 import static DAO.read.readData;
 
@@ -45,9 +41,6 @@ public class loginController  implements Initializable {
     
     private Boolean isFrench = false;
 
-    //TODO
-    //Write code that provides the ability to track user activity by recording all user log-in attempts, dates, and time stamps and whether each attempt was successful in a file named login_activity.txt. Append each new record to the existing file, and save to the root folder of the application.
-    
     /**
      * This function controls the submitButton button.  Text is displayed
      * in English or French based on the user's location.
@@ -66,7 +59,6 @@ public class loginController  implements Initializable {
         String where = "User_Name = '" + name + "'";
         errorLabel.setText("");
 
-
         ResultSet results = readData(column, table, where);
         //Calling results.next() "consumes" the next result, so only use this method as needed
         //How to peek at or check this value?
@@ -76,13 +68,19 @@ public class loginController  implements Initializable {
             //if username and password match, log in
             if (stored_password.equals(password)) {
                 String resourceURL = "/View/mainView.fxml";
+                loginAttempts.recordLoginAttempts("user: " + name + " login successful.");
                 switchStage.switchStage(actionEvent, resourceURL);
             //print errors when password is wrong
             } else {
+                loginAttempts.recordLoginAttempts("user: " + name + " login failed.");
                 setErrors();
             }
         //print errors when no user found
         } else {
+            //don't record login attempt if no user name is present
+            if(name != null) {
+                loginAttempts.recordLoginAttempts("user: " + name + " login failed.");
+            }
             setErrors();
         }
     }
@@ -113,5 +111,4 @@ public class loginController  implements Initializable {
             isFrench = true;
         }
     }
-
 }

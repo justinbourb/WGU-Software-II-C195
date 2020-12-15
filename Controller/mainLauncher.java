@@ -31,6 +31,10 @@ public class mainLauncher extends Application {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         connect.startConnection();
         launch(args);
-        connect.closeConnection();
+        try {
+            connect.closeConnection();
+        } catch (Exception e) {
+
+        }
     }
 }
