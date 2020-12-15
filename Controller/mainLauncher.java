@@ -1,18 +1,20 @@
 package Controller;
 
-import Helpers.DBConnection;
-import Helpers.DatabaseExample;
+import DAO.connect;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import javax.swing.text.Utilities;
 import java.sql.SQLException;
 
+/** This class launches the application */
 public class mainLauncher extends Application {
 
+    /**This function is automatically called by Java.
+     It builds GUI to display.
+     */
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/View/loginView.fxml"));
@@ -20,10 +22,15 @@ public class mainLauncher extends Application {
         primaryStage.show();
     }
 
-
+    /**This function is automatically called by Java.
+     It connects to the database for login purposes.
+     * @param args, default parameter provided by Java
+     * @exception ClassNotFoundException, an exception
+     * @exception SQLException, an exception
+     */
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        DBConnection.startConnection();
+        connect.startConnection();
         launch(args);
-        DBConnection.closeConnection();
+        connect.closeConnection();
     }
 }

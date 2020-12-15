@@ -1,4 +1,4 @@
-package Helpers;
+package DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,7 +13,7 @@ Password: 53688851020
 */
 
 /** This class creates a connection to the database.*/
-public class DBConnection {
+public class connect {
     //db url parts
     private static final String protocol = "jdbc";
     private static final String vendorName = ":mysql:";

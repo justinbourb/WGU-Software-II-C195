@@ -44,12 +44,18 @@ public class loginController  implements Initializable {
     private Label errorLabel;
     
     private Boolean isFrench = false;
+
+    //TODO
+    //Write code that provides the ability to track user activity by recording all user log-in attempts, dates, and time stamps and whether each attempt was successful in a file named login_activity.txt. Append each new record to the existing file, and save to the root folder of the application.
     
     /**
      * This function controls the submitButton button.  Text is displayed
      * in English or French based on the user's location.
      *
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
+     * @exception SQLException, an SQL Exception
+     * @exception ClassNotFoundException, a Class Not Found Exception
+     * @exception IOException, an IOException
      */
     @FXML
     public void submitButtonAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException, IOException {

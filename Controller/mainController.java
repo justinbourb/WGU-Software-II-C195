@@ -1,25 +1,17 @@
   
 package Controller;
 
-import com.sun.scenario.effect.impl.state.AccessHelper;
-import com.sun.tools.jconsole.JConsoleContext;
+import Helpers.confirmView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.fxml.Initializable;
 
-import java.io.DataOutput;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import Helpers.switchStage;
-import DAO.read;
-
-import static DAO.read.readData;
+import javafx.scene.input.KeyEvent;
 
 
 /* TODO
@@ -31,56 +23,115 @@ import static DAO.read.readData;
 
 /** This class controls the mainView.fxml */
 public class mainController implements Initializable {
-    /** This method opens customersView.fxml */
+    /**This function controls the addCustomers button.
+     * @param actionEvent, a JavaFX ActionEvent provided by a button click
+     * @throws IOException an exception
+     */
     @FXML
     void addCustomersButtonAction(ActionEvent actionEvent) throws IOException {
-        String resourceURL = "/View/customersView.fxml";
+        String resourceURL = "/View/customerView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
-  
-    /** This method opens appointmentsView.fxml */
+
+    /**This function controls the addAppointments button.
+     * @param actionEvent, a JavaFX ActionEvent provided by a button click
+     * @throws IOException an exception
+     */
     @FXML
     void addAppointmentsButtonAction(ActionEvent actionEvent) throws IOException {
-        String resourceURL = "/View/appointmentsView.fxml";
+        String resourceURL = "/View/appointmentView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
-  
-    /** This method deletes a customer. */
+
+    /**This function controls the deleteCustomer button.
+     * @param actionEvent, a JavaFX ActionEvent provided by a button click
+     * @throws IOException an exception
+     */
     @FXML
-    void deleteCustomersButtonAction(ActionEvent event) throws IOException {
+    void deleteCustomersButtonAction(ActionEvent actionEvent) throws IOException {
         String confirmText = "Pressing ok will delete this customer.";
         String resourceURL = "/View/mainView.fxml";
-        boolean wasOkPressed = ConfirmView.showAlert(confirmText);
+        boolean wasOkPressed = confirmView.showAlert(confirmText);
         if (wasOkPressed){
             //DELETE CUSTOMER
         }
     }
-  
-    /** This method deletes an appointment. */
+
+    /**This function controls the deleteAppointment button.
+     * @param actionEvent, a JavaFX ActionEvent provided by a button click
+     * @throws IOException an exception
+     */
     @FXML
-    void deleteAppointmentButtonAction(ActionEvent event) throws IOException {
+    void deleteAppointmentButtonAction(ActionEvent actionEvent) throws IOException {
         String confirmText = "Pressing ok will delete this customer.";
         String resourceURL = "/View/mainView.fxml";
-        boolean wasOkPressed = ConfirmView.showAlert(confirmText);
+        boolean wasOkPressed = confirmView.showAlert(confirmText);
         if (wasOkPressed){
             //DELETE APPOINTMENT
         }
     }
+
+    /**This function controls the editCustomer button.
+     * @param actionEvent, a JavaFX ActionEvent provided by a button click
+     * @throws IOException an exception
+     */
+    public void editCustomerButtonAction(ActionEvent actionEvent) {
+    }
+
+    /**This function controls the editAppointment button.
+     * @param actionEvent, a JavaFX ActionEvent provided by a button click
+     * @throws IOException an exception
+     */
+    public void editAppointmentButtonAction(ActionEvent actionEvent) {
+    }
   
-    /** This method opens loginView.fxml */
+    /** This method opens loginView.fxml
+     * @param actionEvent, a JavaFX ActionEvent provided by a button click
+     * @throws IOException an exception
+     */
     @FXML
     void logoutButtonAction(ActionEvent actionEvent) throws IOException {
         String resourceURL = "/View/loginView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
-
-    /** This method opens calendarView.fxml */
+    /**This function controls the modifyCustomer button.
+     * @param actionEvent, a JavaFX ActionEvent provided by a button click
+     * @throws IOException an exception
+     */
     @FXML
-    void viewAppointmentsButtonAction(ActionEvent actionEvent) throws IOException {
-        String resourceURL = "/View/calendarView.fxml";
+    public void modifyCustomerButtonAction(ActionEvent actionEvent) throws IOException {
+//        Inventory.selectedPartIndex = partTable.getSelectionModel().getFocusedIndex();
+//        Inventory.modifyPartButtonClicked = true;
+        String resourceURL = "/View/customerView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
-  
+
+    /**This function controls the modifyAppointment button.
+     * @param actionEvent, a JavaFX ActionEvent provided by a button click
+     * @throws IOException an exception
+     */
+    @FXML
+    void modifyAppointmentButtonAction(ActionEvent actionEvent) throws IOException {
+//        Inventory.selectedProductIndex = productTable.getSelectionModel().getFocusedIndex();
+//        Inventory.modifyProductButtonClicked = true;
+        String resourceURL = "/View/appointmentView.fxml";
+        switchStage.switchStage(actionEvent, resourceURL);
+    }
+
+    /**This function controls the customerSearch Text button.
+     * @param keyEvent, a JavaFX keyEvent provided by a key click
+     * @throws IOException an exception
+     */
+    public void onKeyReleasedCustomerSearchText(KeyEvent keyEvent) {
+    }
+
+    /**This function controls the customerSearch Text button.
+     * @param keyEvent, a JavaFX keyEvent provided by a key click
+     * @throws IOException an exception
+     */
+    public void onKeyReleasedAppointmentSearchText(KeyEvent keyEvent) {
+    }
+
     /**This function is automatically called by Java.  
     It handles data setup for the GUI to display.
     */
@@ -88,5 +139,4 @@ public class mainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //fill customer table view
     }
-
 }

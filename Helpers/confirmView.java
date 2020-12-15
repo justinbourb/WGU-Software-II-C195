@@ -1,4 +1,4 @@
-package Controller;
+package Helpers;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -6,7 +6,7 @@ import javafx.scene.control.ButtonType;
 import java.util.Optional;
 
 /** This class shows a confirm button in the GUI.*/
-public class ConfirmView {
+public class confirmView {
   
   /** This function shows a confirm button in the GUI.
   *@param confirmText, a string containing confirmation text to display
