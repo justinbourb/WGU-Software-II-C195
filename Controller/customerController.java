@@ -3,8 +3,11 @@ package Controller;
 import Helpers.switchStage;
 import javafx.event.ActionEvent;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -12,7 +15,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 /** This class controls the customerView.fxml */
-public class customerController {
+public class customerController implements Initializable {
 
     @FXML
     private Label titleLabel;
@@ -126,5 +129,10 @@ Note: The address text field should not include first-level division and country
      * @param actionEvent, a JavaFX ActionEvent provided by a combo box
      */
     public void firstLevelDivisionComboBoxAction(ActionEvent actionEvent) {
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        //prefill if editing
     }
 }
