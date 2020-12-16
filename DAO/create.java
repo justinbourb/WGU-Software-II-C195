@@ -11,7 +11,7 @@ public class create {
 
 
     /**This function creates data in the database and returns the results as a ResultSet.
-    * @param column, the column name as a string
+    * @param columns, the column(s) name as a string
     * @param table, the table as a string
     * @param where, the where as a string
     * @exception SQLException, an SQL Exception
