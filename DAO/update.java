@@ -1,5 +1,10 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**This class is part of the Database Access Object design pattern. 
 * It is used to update data from the database.*/
 
@@ -13,7 +18,7 @@ public class update {
     * @exception ClassNotFoundException, a Class Not Found Exception
     * @return results, a ResultsSet of the data found
     */
-    public static ResultSet readData(String column, String table, String where) throws SQLException, ClassNotFoundException {
+    public static ResultSet updateData(String column, String table, String where) throws SQLException, ClassNotFoundException {
         /* Example usage:
         UPDATE Customers
         SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
@@ -24,5 +29,4 @@ public class update {
         ResultSet results = query.executeQuery();
         return results;
     }
-}
 }
