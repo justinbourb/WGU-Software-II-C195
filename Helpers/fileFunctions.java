@@ -33,8 +33,7 @@ public class fileFunctions {
      * @return path, A Path path.
      */
     public static Path findPath() {
-        Path path = FileSystems.getDefault().getPath("src/login_activity.txt");
-        return path;
+        return FileSystems.getDefault().getPath("src/login_activity.txt");
     }
 
     /**This function will read data from a file.
@@ -42,7 +41,7 @@ public class fileFunctions {
      */
     public static void newBufferedReader(Path path) {
         try (var reader = Files.newBufferedReader(path)) {
-            String currentLine = null;
+            String currentLine;
             System.out.println("The file currently contains: ");
             while ((currentLine = reader.readLine()) != null)
                 System.out.println(currentLine);
@@ -53,10 +52,9 @@ public class fileFunctions {
 
     /**
      * This function will append data to a file
-     *
      * @param path, a Path path to the file to append to.
      */
-    public static void newBufferedWriter(Path path, String textToAppend) throws IOException {
+    public static void newBufferedWriter(Path path, String textToAppend) {
         try (var writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
             writer.append(textToAppend);
         } catch (Exception e) {

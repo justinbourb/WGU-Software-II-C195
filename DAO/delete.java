@@ -13,17 +13,15 @@ public class delete {
     * @param table, the table as a string
     * @param where, the where as a string
     * @exception SQLException, an SQL Exception
-    * @exception ClassNotFoundException, a Class Not Found Exception
     * @return results, a ResultsSet of the data found
     */
-    public static ResultSet deleteData(String table, String where) throws SQLException, ClassNotFoundException {
+    public static ResultSet deleteData(String table, String where) throws SQLException {
         /* Example usage:
         DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste';
         */
         Connection connection = connect.startConnection();
         PreparedStatement query = connection.prepareStatement("DELETE FROM " + table + " WHERE " + where);
-        ResultSet results = query.executeQuery();
-        return results;
+        return query.executeQuery();
     }
 
 }

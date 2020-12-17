@@ -16,7 +16,7 @@ public class loginAttempts {
         fileFunctions.newBufferedReader(path);
         try {
             fileFunctions.newBufferedWriter(path, timeFunctions.localDateNow() + " " + userNameAndStatus + System.lineSeparator());
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

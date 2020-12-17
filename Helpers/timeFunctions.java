@@ -11,10 +11,9 @@ public class timeFunctions {
     public static String localDateNow() {
         //Lambda expressions are beneficial in reducing the number of lines of code.
         Supplier<ZonedDateTime> nowUTC = () -> ZonedDateTime.now(ZoneOffset.UTC);
-        Supplier<ZonedDateTime> now = () -> ZonedDateTime.now();
+        //Supplier<ZonedDateTime> now = () -> ZonedDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String returnValue = nowUTC.get().format(formatter);
-        return returnValue;
+        return nowUTC.get().format(formatter);
     }
 
     /**

@@ -7,8 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.sql.SQLException;
-
 /** This class launches the application */
 public class mainLauncher extends Application {
 
@@ -26,9 +24,8 @@ public class mainLauncher extends Application {
      It connects to the database for login purposes.
      * @param args, default parameter provided by Java
      * @exception ClassNotFoundException, an exception
-     * @exception SQLException, an exception
      */
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws ClassNotFoundException {
         connect.startConnection();
         launch(args);
         try {

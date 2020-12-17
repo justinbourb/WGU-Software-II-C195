@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
@@ -63,7 +62,6 @@ public class loginController  implements Initializable {
         //Calling results.next() "consumes" the next result, so only use this method as needed
         //How to peek at or check this value?
         if(results.next()) {
-            String stored_name = results.getString("User_Name");
             String stored_password = results.getString("Password");
             //if username and password match, log in
             if (stored_password.equals(password)) {

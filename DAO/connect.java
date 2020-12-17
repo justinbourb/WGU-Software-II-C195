@@ -29,21 +29,19 @@ public class connect {
 
     /**This function starts the database connection.
      * @return connection - a database connection*/
-    public static Connection startConnection() throws ClassNotFoundException {
+    public static Connection startConnection() {
         try {
             Class.forName(MYSQLJBCDriver);
             connection = DriverManager.getConnection(jdbcURL, username, password);
             System.out.println("Connection successful.");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
         return connection;
     }
 
     /**This function closes the database connection.*/
-    public static void closeConnection() throws SQLException {
+    public static void closeConnection() {
         try {
             connection.close();
             System.out.println("Connection closed.");

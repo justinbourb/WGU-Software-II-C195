@@ -15,10 +15,9 @@ public class update {
     * @param table, the table as a string
     * @param where, the where as a string
     * @exception SQLException, an SQL Exception
-    * @exception ClassNotFoundException, a Class Not Found Exception
     * @return results, a ResultsSet of the data found
     */
-    public static ResultSet updateData(String column, String table, String where) throws SQLException, ClassNotFoundException {
+    public static ResultSet updateData(String column, String table, String where) throws SQLException {
         /* Example usage:
         UPDATE Customers
         SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
@@ -26,7 +25,6 @@ public class update {
         */
         Connection connection = connect.startConnection();
         PreparedStatement query = connection.prepareStatement("UPDATE " + column + " SET " + table + " WHERE " + where);
-        ResultSet results = query.executeQuery();
-        return results;
+        return query.executeQuery();
     }
 }

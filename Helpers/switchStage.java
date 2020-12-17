@@ -13,17 +13,14 @@ import static javafx.fxml.FXMLLoader.*;
 /** This class will setup and show a new Stage (GUI Screen) after a button click.*/
 public class switchStage {
 
-    private static Stage stage;
-    private static Parent scene;
-
     /** This class will setup and show a new Stage (GUI Screen) after a button click.
     *@param event, a ActionEvent provided by a button click
     *@param resourceURL, a string pointing to a .fxml file
     */
     @FXML
     public static void switchStage(ActionEvent event, String resourceURL) throws IOException {
-        stage = (Stage)((Button)event.getSource()).getScene().getWindow();
-        scene = load(switchStage.class.getResource(resourceURL));
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        Parent scene = load(switchStage.class.getResource(resourceURL));
         stage.setScene(new Scene(scene));
         stage.show();
     }

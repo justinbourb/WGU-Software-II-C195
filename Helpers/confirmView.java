@@ -22,10 +22,14 @@ public class confirmView {
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, confirmText);
     Optional<ButtonType> result = alert.showAndWait();
     //wait for the result (user clicks a button) and return true if ok is pressed
-    if (result.isPresent()){
-      return (result.get() == ButtonType.OK);
-    }
+    /* old style
+     if (result.isPresent()){
+        return (result.get() == ButtonType.OK);
+      }
     //user clicked false
     return false;
+     */
+    //functional programming is more efficient
+    return result.filter(buttonType -> (buttonType == ButtonType.OK)).isPresent();
   }
 }

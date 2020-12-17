@@ -14,13 +14,11 @@ public class read {
     * @param table, the table as a string
     * @param where, the where as a string
     * @exception SQLException, an SQL Exception
-    * @exception ClassNotFoundException, a Class Not Found Exception
     * @return results, a ResultsSet of the data found
     */
-    public static ResultSet readData(String column, String table, String where) throws SQLException, ClassNotFoundException {
+    public static ResultSet readData(String column, String table, String where) throws SQLException {
         Connection connection = connect.startConnection();
         PreparedStatement query = connection.prepareStatement("SELECT " + column + " FROM " + table + " WHERE " + where);
-        ResultSet results = query.executeQuery();
-        return results;
+        return query.executeQuery();
     }
 }

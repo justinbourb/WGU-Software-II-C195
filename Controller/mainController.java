@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 
 import Helpers.switchStage;
 import javafx.scene.input.KeyEvent;
-import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -149,10 +148,9 @@ public class mainController implements Initializable {
 
     /**This function controls the deleteCustomer button.
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
-     * @throws IOException an exception
      */
     @FXML
-    void deleteCustomersButtonAction(ActionEvent actionEvent) throws IOException {
+    void deleteCustomersButtonAction(ActionEvent actionEvent) {
         String confirmText = "Pressing ok will delete this customer.";
         String resourceURL = "/View/mainView.fxml";
         boolean wasOkPressed = confirmView.showAlert(confirmText);
@@ -163,11 +161,10 @@ public class mainController implements Initializable {
 
     /**This function controls the deleteAppointment button.
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
-     * @throws IOException an exception
      */
     @FXML
-    void deleteAppointmentButtonAction(ActionEvent actionEvent) throws IOException {
-        String confirmText = "Pressing ok will delete this customer.";
+    void deleteAppointmentButtonAction(ActionEvent actionEvent) {
+        String confirmText = "Pressing ok will delete this appointment.";
         String resourceURL = "/View/mainView.fxml";
         boolean wasOkPressed = confirmView.showAlert(confirmText);
         if (wasOkPressed){
@@ -228,14 +225,12 @@ public class mainController implements Initializable {
 
     /**This function controls the customerSearch Text button.
      * @param keyEvent, a JavaFX keyEvent provided by a key click
-     * @throws IOException an exception
      */
     public void onKeyReleasedCustomerSearchText(KeyEvent keyEvent) {
     }
 
     /**This function controls the customerSearch Text button.
      * @param keyEvent, a JavaFX keyEvent provided by a key click
-     * @throws IOException an exception
      */
     public void onKeyReleasedAppointmentSearchText(KeyEvent keyEvent) {
     }
@@ -253,5 +248,4 @@ public class mainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //fill customer table view
     }
-
 }
