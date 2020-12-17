@@ -43,19 +43,19 @@ public class mainController implements Initializable {
     private TextField customersSearchText;
 
     @FXML
-    private TableView<?> customerTable;
+    private TableView<ResultSet> customerTable;
 
     @FXML
-    private TableColumn<?, ?> customerIDTableColumn;
+    private TableColumn<ResultSet , Integer> customerIDTableColumn;
 
     @FXML
-    private TableColumn<?, ?> customerNameTableColumn;
+    private TableColumn<ResultSet , String> customerNameTableColumn;
 
     @FXML
-    private TableColumn<?, ?> customerAddressTableColumn;
+    private TableColumn<ResultSet , String> customerAddressTableColumn;
 
     @FXML
-    private TableColumn<?, ?> customerPhoneTableColumn;
+    private TableColumn<ResultSet , String> customerPhoneTableColumn;
 
     @FXML
     private Button addCustomerButton;
@@ -79,31 +79,31 @@ public class mainController implements Initializable {
     private TextField appointmentsSearchText;
 
     @FXML
-    private TableView<?> appointmentTable;
+    private TableView<ResultSet> appointmentTable;
 
     @FXML
-    private TableColumn<?, ?> appointmentIDTableColumn;
+    private TableColumn<ResultSet , Integer> appointmentIDTableColumn;
 
     @FXML
-    private TableColumn<?, ?> custIDTableColumn;
+    private TableColumn<ResultSet , Integer> custIDTableColumn;
 
     @FXML
-    private TableColumn<?, ?> titleTableColumn;
+    private TableColumn<ResultSet , String> titleTableColumn;
 
     @FXML
-    private TableColumn<?, ?> appointmentLocationTableColumn;
+    private TableColumn<ResultSet , String> appointmentLocationTableColumn;
 
     @FXML
-    private TableColumn<?, ?> contactTableColumn;
+    private TableColumn<ResultSet , String> contactTableColumn;
 
     @FXML
-    private TableColumn<?, ?> typeTableColumn;
+    private TableColumn<ResultSet , String> typeTableColumn;
 
     @FXML
-    private TableColumn<?, ?> appointmentStartTableColumn;
+    private TableColumn<ResultSet , String> appointmentStartTableColumn;
 
     @FXML
-    private TableColumn<?, ?> appointmentEndTableColumn;
+    private TableColumn<ResultSet , String> appointmentEndTableColumn;
 
     @FXML
     private Button appointmentAddButton;
@@ -205,8 +205,8 @@ public class mainController implements Initializable {
      */
     @FXML
     public void modifyCustomerButtonAction(ActionEvent actionEvent) throws IOException {
-//        Inventory.selectedPartIndex = partTable.getSelectionModel().getFocusedIndex();
-//        Inventory.modifyPartButtonClicked = true;
+        mainModel.selectedCustomerIndex = customerTable.getSelectionModel().getFocusedIndex();
+        mainModel.modifyCustomerButtonClicked = true;
         String resourceURL = "/View/customerView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -217,8 +217,8 @@ public class mainController implements Initializable {
      */
     @FXML
     void modifyAppointmentButtonAction(ActionEvent actionEvent) throws IOException {
-//        Inventory.selectedProductIndex = productTable.getSelectionModel().getFocusedIndex();
-//        Inventory.modifyProductButtonClicked = true;
+        mainModel.selectedAppointmentIndex = appointmentTable.getSelectionModel().getFocusedIndex();
+        mainModel.modifyAppointmentButtonClicked = true;
         String resourceURL = "/View/appointmentView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -246,6 +246,23 @@ public class mainController implements Initializable {
     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //fill customer table view
+    //check out https://stackoverflow.com/questions/18497699/populate-a-tableview-using-database-in-javafx
+         
+        //fill customer and appointment table view
+        //prepopulate customer and appointment with any data stored in the ResultSet 
+        //retrieved from the database
+        String column = "*";
+        String table = "customers";
+        ResultSet results = readData(column, table)
+        //setItems tells the partTable which data set it is using, no data is populated yet
+        customerTable.setItems(results);
+        customerTable.setPlaceholder(new Label("The table is empty or no search results found."));
+        //populate the table columns, who thought setCellValueFactory was a great name to use??
+        customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
+        customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+      
+      //TODO: test this implementation and modify as needed, see link for an example
     }
 }
