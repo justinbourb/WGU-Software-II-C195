@@ -106,6 +106,8 @@ Note: The address text field should not include first-level division and country
      */
     public void saveButtonAction(ActionEvent actionEvent) throws IOException {
         //add save logic
+        //reset edit button flag
+        mainModel.modifyCustomerButtonClicked = false;
         String resourceURL = "/View/mainView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -115,6 +117,8 @@ Note: The address text field should not include first-level division and country
      * @throws IOException an exception
      */
     public void cancelButtonAction(ActionEvent actionEvent) throws IOException {
+        //reset edit button flag
+        mainModel.modifyCustomerButtonClicked = false;
         String resourceURL = "/View/mainView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -123,6 +127,7 @@ Note: The address text field should not include first-level division and country
      * @param actionEvent, a JavaFX ActionEvent provided by a combo box
      */
     public void countryComboBoxAction(ActionEvent actionEvent) {
+        //see https://stackoverflow.com/questions/39539838/javafx-populating-a-combobox-with-data-from-a-mysql-database-stringconverter-b
     }
 
     /**This function controls the first level division combo box.
