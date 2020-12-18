@@ -100,17 +100,8 @@ Note: The address text field should not include first-level division and country
 •  When a customer record is deleted, a custom message should display in the user interface.
      */
 
-    /**This function controls the save button.
-     * @param actionEvent, a JavaFX ActionEvent provided by a button click
-     * @throws IOException an exception
-     */
-    public void saveButtonAction(ActionEvent actionEvent) throws IOException {
-        //add save logic
-        //reset edit button flag
-        mainModel.modifyCustomerButtonClicked = false;
-        String resourceURL = "/View/mainView.fxml";
-        switchStage.switchStage(actionEvent, resourceURL);
-    }
+    //TODO: update customerView.FXML - correct variable names
+    //TODO: verify database column names and test functionality
 
     /**This function controls the cancel button.
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
@@ -135,9 +126,52 @@ Note: The address text field should not include first-level division and country
      */
     public void firstLevelDivisionComboBoxAction(ActionEvent actionEvent) {
     }
-
+    
+    /**This function controls the save button.
+     * @param actionEvent, a JavaFX ActionEvent provided by a button click
+     * @throws IOException an exception
+     */
+    public void saveButtonAction(ActionEvent actionEvent) throws IOException {
+        //capture values from gui
+        String name = nameText.getText();
+        String address = addressText.getText();
+        String postalCode = postalCodeText.getText();
+        String phone = phoneNumberText.getText;
+        String country = countryComboBox.getValue();
+        String firstLevelDivision = firstLevelDivisionComboBox.getValue();
+        //insert values into database
+        DOA.createData("Customers", "name, address, postalCode, phone, country, firstLevelDivision", 
+                       name, address, postalCode, phone, country, firstLevelDivision);
+        
+        //reset edit button flag
+        mainModel.modifyCustomerButtonClicked = false;
+        String resourceURL = "/View/mainView.fxml";
+        switchStage.switchStage(actionEvent, resourceURL);
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //prefill if editing
+        if (mainModel.modifyCustomerButtonClicked == true){
+            titleLabel.setText("Edit Customer");
+            //pull data from database where selected customer ID in the mainview tableview
+            //matches the ID in the customer table of the database
+            String column = "*";
+            String table = "Customers";
+            String where = "customerID = '" + mainModel.selectedCustomerIndex.ID+ "'";
+
+            ResultSet results = readData(column, table, where);
+            /*
+            //TODO: pull data from Database
+            //pull all info into ResultSet and filter results per category?
+            if(results.next()) {
+                String stored_password = results.getString("Password");
+                nameText = results.getString("name");
+                addressText = results.getString("address");
+                postalCodeText = results.getString("postalCode");
+                phoneNumberText = results.getString("phone");
+                countryComboBox.getSelectionModel.select("results.getString("country")");
+                firstLevelDivisionComboBox.getSelectionModel.select("results.getString("firstLevelDivision")");
+            */
+        }
     }
 }
