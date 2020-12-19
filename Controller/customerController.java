@@ -1,9 +1,14 @@
 package Controller;
 
+import DAO.create;
+import DAO.read;
 import Helpers.switchStage;
+import Model.mainModel;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -13,6 +18,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+
+import javax.print.DocFlavor;
 
 /** This class controls the customerView.fxml */
 public class customerController implements Initializable {
@@ -42,13 +49,13 @@ public class customerController implements Initializable {
     private TextField nameText;
 
     @FXML
-    private TextField inventoryText;
+    private TextField addressText;
 
     @FXML
-    private TextField maxText;
+    private TextField postalCodeText;
 
     @FXML
-    private TextField machineOrCompanyText;
+    private TextField phoneNumberText;
 
     @FXML
     private Button saveButton;
@@ -136,13 +143,20 @@ Note: The address text field should not include first-level division and country
         String name = nameText.getText();
         String address = addressText.getText();
         String postalCode = postalCodeText.getText();
-        String phone = phoneNumberText.getText;
-        String country = countryComboBox.getValue();
-        String firstLevelDivision = firstLevelDivisionComboBox.getValue();
+        String phone = phoneNumberText.getText();
+        //cast as String
+        String country = (String) countryComboBox.getValue();
+        String firstLevelDivision = (String) firstLevelDivisionComboBox.getValue();
+        //TODO: correct how create.createData is called
         //insert values into database
-        DOA.createData("Customers", "name, address, postalCode, phone, country, firstLevelDivision", 
-                       name, address, postalCode, phone, country, firstLevelDivision);
-        
+        try {
+            create.createData("Customers",
+                    "name, address, postalCode, phone, country, firstLevelDivision",
+                    (name + ',' + address + ',' + postalCode  + ',' + phone  + ',' + country  + ',' + firstLevelDivision));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         //reset edit button flag
         mainModel.modifyCustomerButtonClicked = false;
         String resourceURL = "/View/mainView.fxml";
@@ -152,26 +166,45 @@ Note: The address text field should not include first-level division and country
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //prefill if editing
         if (mainModel.modifyCustomerButtonClicked == true){
+            String nameText;
+            String addressText;
+            String postalCodeText;
+            String phoneNumberText;
             titleLabel.setText("Edit Customer");
             //pull data from database where selected customer ID in the mainview tableview
             //matches the ID in the customer table of the database
             String column = "*";
             String table = "Customers";
-            String where = "customerID = '" + mainModel.selectedCustomerIndex.ID+ "'";
+            //TODO: I want this line to find the customer ID selected
+            //String where = "customerID = " + mainModel.selectedCustomerIndex.ID;
+            String where = "customerID = 1";
+            ResultSet results = null;
+            try {
+                results = read.readData(column, table, where);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
-            ResultSet results = readData(column, table, where);
-            /*
             //TODO: pull data from Database
             //pull all info into ResultSet and filter results per category?
-            if(results.next()) {
-                String stored_password = results.getString("Password");
-                nameText = results.getString("name");
-                addressText = results.getString("address");
-                postalCodeText = results.getString("postalCode");
-                phoneNumberText = results.getString("phone");
-                countryComboBox.getSelectionModel.select("results.getString("country")");
-                firstLevelDivisionComboBox.getSelectionModel.select("results.getString("firstLevelDivision")");
-            */
+            /* Here are the Customer Database Columns
+            Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID
+             */
+            try {
+                if(results.next()) {
+                    String stored_password = results.getString("Password");
+                    nameText = results.getString("name");
+                    addressText = results.getString("address");
+                    postalCodeText = results.getString("postalCode");
+                    phoneNumberText = results.getString("phone");
+                    //results.getString finds the name of the item and Integer.parseInt converts it into an int based on posistion
+                    countryComboBox.getSelectionModel().select(Integer.parseInt(results.getString("country")));
+                    firstLevelDivisionComboBox.getSelectionModel().select(Integer.parseInt(results.getString("firstLevelDivision")));
+
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

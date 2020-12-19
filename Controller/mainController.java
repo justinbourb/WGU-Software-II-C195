@@ -1,16 +1,22 @@
   
 package Controller;
 
+import DAO.read;
 import Helpers.confirmView;
+import Model.mainModel;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import Helpers.switchStage;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -253,15 +259,24 @@ public class mainController implements Initializable {
         //retrieved from the database
         String column = "*";
         String table = "customers";
-        ResultSet results = readData(column, table)
-        //setItems tells the partTable which data set it is using, no data is populated yet
-        customerTable.setItems(results);
+        ResultSet results = null;
+        try {
+            results = read.readData(column, table);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //setItems tells the customerTable which data set it is using
+        //the result set is cast as an ObservableList
+        /* Here are the Customer Database Columns
+        Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID
+         */
+        customerTable.setItems((ObservableList<ResultSet>) results);
         customerTable.setPlaceholder(new Label("The table is empty or no search results found."));
         //populate the table columns, who thought setCellValueFactory was a great name to use??
-        customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
-        customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("Customer_ID"));
+        customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("Customer_Name"));
+        customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<>("Address"));
+        customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<>("Phone"));
       
       //TODO: test this implementation and modify as needed, see link for an example
     }
