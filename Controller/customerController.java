@@ -3,7 +3,7 @@ package Controller;
 import DAO.create;
 import DAO.read;
 import Helpers.switchStage;
-import Model.mainModel;
+import Model.customerModel;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -18,8 +18,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-
-import javax.print.DocFlavor;
 
 /** This class controls the customerView.fxml */
 public class customerController implements Initializable {
@@ -116,7 +114,7 @@ Note: The address text field should not include first-level division and country
      */
     public void cancelButtonAction(ActionEvent actionEvent) throws IOException {
         //reset edit button flag
-        mainModel.modifyCustomerButtonClicked = false;
+        customerModel.modifyCustomerButtonClicked = false;
         String resourceURL = "/View/mainView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -158,14 +156,14 @@ Note: The address text field should not include first-level division and country
         }
 
         //reset edit button flag
-        mainModel.modifyCustomerButtonClicked = false;
+        customerModel.modifyCustomerButtonClicked = false;
         String resourceURL = "/View/mainView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //prefill if editing
-        if (mainModel.modifyCustomerButtonClicked == true){
+        if (customerModel.modifyCustomerButtonClicked == true){
             String nameText;
             String addressText;
             String postalCodeText;
@@ -193,10 +191,10 @@ Note: The address text field should not include first-level division and country
             try {
                 if(results.next()) {
                     String stored_password = results.getString("Password");
-                    nameText = results.getString("name");
-                    addressText = results.getString("address");
-                    postalCodeText = results.getString("postalCode");
-                    phoneNumberText = results.getString("phone");
+                    nameText = results.getString("Customer_Name");
+                    addressText = results.getString("Address");
+                    postalCodeText = results.getString("Postal_Code");
+                    phoneNumberText = results.getString("Phone");
                     //results.getString finds the name of the item and Integer.parseInt converts it into an int based on posistion
                     countryComboBox.getSelectionModel().select(Integer.parseInt(results.getString("country")));
                     firstLevelDivisionComboBox.getSelectionModel().select(Integer.parseInt(results.getString("firstLevelDivision")));

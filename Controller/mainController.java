@@ -1,9 +1,9 @@
   
 package Controller;
 
-import DAO.read;
 import Helpers.confirmView;
-import Model.mainModel;
+import Helpers.customerTableData;
+import Model.customerModel;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -49,19 +49,19 @@ public class mainController implements Initializable {
     private TextField customersSearchText;
 
     @FXML
-    private TableView<ResultSet> customerTable;
+    private TableView<customerModel> customerTable;
 
     @FXML
-    private TableColumn<ResultSet , Integer> customerIDTableColumn;
+    private TableColumn<customerModel, String> customerIDTableColumn;
 
     @FXML
-    private TableColumn<ResultSet , String> customerNameTableColumn;
+    private TableColumn<customerModel, String> customerNameTableColumn;
 
     @FXML
-    private TableColumn<ResultSet , String> customerAddressTableColumn;
+    private TableColumn<customerModel, String> customerAddressTableColumn;
 
     @FXML
-    private TableColumn<ResultSet , String> customerPhoneTableColumn;
+    private TableColumn<customerModel, String> customerPhoneTableColumn;
 
     @FXML
     private Button addCustomerButton;
@@ -211,8 +211,8 @@ public class mainController implements Initializable {
      */
     @FXML
     public void modifyCustomerButtonAction(ActionEvent actionEvent) throws IOException {
-        mainModel.selectedCustomerIndex = customerTable.getSelectionModel().getFocusedIndex();
-        mainModel.modifyCustomerButtonClicked = true;
+        customerModel.selectedCustomerIndex = customerTable.getSelectionModel().getFocusedIndex();
+        customerModel.modifyCustomerButtonClicked = true;
         String resourceURL = "/View/customerView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -223,8 +223,8 @@ public class mainController implements Initializable {
      */
     @FXML
     void modifyAppointmentButtonAction(ActionEvent actionEvent) throws IOException {
-        mainModel.selectedAppointmentIndex = appointmentTable.getSelectionModel().getFocusedIndex();
-        mainModel.modifyAppointmentButtonClicked = true;
+        customerModel.selectedAppointmentIndex = appointmentTable.getSelectionModel().getFocusedIndex();
+        customerModel.modifyAppointmentButtonClicked = true;
         String resourceURL = "/View/appointmentView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -248,36 +248,31 @@ public class mainController implements Initializable {
     }
 
     /**This function is automatically called by Java.  
-    It handles data setup for the GUI to display.
+    It handles data setup for the GUI to display. To generate a tableView
+     from a Database, java requires an intermediary step of creating
+     a Object and adding the object to a ObservableList.  Thus we use
+     Model.customerModel to hold data from the database.  Then add the
+     customerModel to an ObservableList then add the list to the tableView.
     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     //check out https://stackoverflow.com/questions/18497699/populate-a-tableview-using-database-in-javafx
-         
-        //fill customer and appointment table view
-        //prepopulate customer and appointment with any data stored in the ResultSet 
-        //retrieved from the database
-        String column = "*";
-        String table = "customers";
-        ResultSet results = null;
+
+        ObservableList<customerModel> data = null;
         try {
-            results = read.readData(column, table);
+            data = customerTableData.getCustomersData();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //setItems tells the customerTable which data set it is using
-        //the result set is cast as an ObservableList
-        /* Here are the Customer Database Columns
-        Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID
-         */
-        customerTable.setItems((ObservableList<ResultSet>) results);
         customerTable.setPlaceholder(new Label("The table is empty or no search results found."));
-        //populate the table columns, who thought setCellValueFactory was a great name to use??
-        customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("Customer_ID"));
-        customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("Customer_Name"));
-        customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<>("Address"));
-        customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<>("Phone"));
-      
+        customerTable.setEditable(true);
+        customerTable.setItems(data);
+        customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("ID"));
+        customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("name"));
+        customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("address"));
+        customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("phone"));
+
+        appointmentTable.setPlaceholder(new Label("The table is empty or no search results found."));
       //TODO: test this implementation and modify as needed, see link for an example
     }
 }
