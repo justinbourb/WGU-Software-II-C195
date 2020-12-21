@@ -187,6 +187,8 @@ public class mainController implements Initializable {
      * @throws IOException an exception
      */
     public void editCustomerButtonAction(ActionEvent actionEvent) throws IOException {
+        customerModel.selectedCustomerIndex = customerTable.getSelectionModel().getFocusedIndex();
+        customerModel.modifyCustomerButtonClicked = true;
         String resourceURL = "/View/customerView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -196,6 +198,8 @@ public class mainController implements Initializable {
      * @throws IOException an exception
      */
     public void editAppointmentButtonAction(ActionEvent actionEvent) throws IOException {
+        customerModel.selectedAppointmentIndex = appointmentTable.getSelectionModel().getFocusedIndex();
+        customerModel.modifyAppointmentButtonClicked = true;
         String resourceURL = "/View/appointmentView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -207,29 +211,6 @@ public class mainController implements Initializable {
     @FXML
     void logoutButtonAction(ActionEvent actionEvent) throws IOException {
         String resourceURL = "/View/loginView.fxml";
-        switchStage.switchStage(actionEvent, resourceURL);
-    }
-    /**This function controls the modifyCustomer button.
-     * @param actionEvent, a JavaFX ActionEvent provided by a button click
-     * @throws IOException an exception
-     */
-    @FXML
-    public void modifyCustomerButtonAction(ActionEvent actionEvent) throws IOException {
-        customerModel.selectedCustomerIndex = customerTable.getSelectionModel().getFocusedIndex();
-        customerModel.modifyCustomerButtonClicked = true;
-        String resourceURL = "/View/customerView.fxml";
-        switchStage.switchStage(actionEvent, resourceURL);
-    }
-
-    /**This function controls the modifyAppointment button.
-     * @param actionEvent, a JavaFX ActionEvent provided by a button click
-     * @throws IOException an exception
-     */
-    @FXML
-    void modifyAppointmentButtonAction(ActionEvent actionEvent) throws IOException {
-        customerModel.selectedAppointmentIndex = appointmentTable.getSelectionModel().getFocusedIndex();
-        customerModel.modifyAppointmentButtonClicked = true;
-        String resourceURL = "/View/appointmentView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
 

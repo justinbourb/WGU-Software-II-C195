@@ -7,6 +7,7 @@ import Model.customerModel;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.WatchService;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -164,18 +165,16 @@ Note: The address text field should not include first-level division and country
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //prefill if editing
         if (customerModel.modifyCustomerButtonClicked == true){
-            String nameText;
-            String addressText;
-            String postalCodeText;
-            String phoneNumberText;
+            System.out.println("Was modify button clicked?: " + customerModel.modifyCustomerButtonClicked);
+            System.out.println("Line selected: " + customerModel.selectedCustomerIndex);
             titleLabel.setText("Edit Customer");
             //pull data from database where selected customer ID in the mainview tableview
             //matches the ID in the customer table of the database
             String column = "*";
-            String table = "Customers";
+            String table = "customers";
             //TODO: I want this line to find the customer ID selected
-            //String where = "customerID = " + mainModel.selectedCustomerIndex.ID;
-            String where = "customerID = 1";
+            //String where = "Customer_ID = " + mainModel.selectedCustomerIndex.ID;
+            String where = "Customer_ID = 1";
             ResultSet results = null;
             try {
                 results = read.readData(column, table, where);
@@ -188,13 +187,14 @@ Note: The address text field should not include first-level division and country
             /* Here are the Customer Database Columns
             Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID
              */
+
             try {
                 if(results.next()) {
-                    String stored_password = results.getString("Password");
-                    nameText = results.getString("Customer_Name");
-                    addressText = results.getString("Address");
-                    postalCodeText = results.getString("Postal_Code");
-                    phoneNumberText = results.getString("Phone");
+                    
+                    nameText.setText(results.getString("Customer_Name"));
+                    addressText.setText(results.getString("Address"));
+                    postalCodeText.setText(results.getString("Postal_Code"));
+                    phoneNumberText.setText(results.getString("Phone"));
                     //results.getString finds the name of the item and Integer.parseInt converts it into an int based on posistion
                     countryComboBox.getSelectionModel().select(Integer.parseInt(results.getString("country")));
                     firstLevelDivisionComboBox.getSelectionModel().select(Integer.parseInt(results.getString("firstLevelDivision")));
