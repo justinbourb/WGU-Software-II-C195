@@ -58,7 +58,7 @@
                         <TableColumn fx:id="appointmentIDTableColumn" prefWidth="28.0" text="ID" />
                         <TableColumn fx:id="custIDTableColumn" prefWidth="56.0" text="Cust. ID" />
                         <TableColumn fx:id="titleTableColumn" prefWidth="115.0" text="Title" />
-                        <TableColumn prefWidth="115.0" text="Descrip." />
+                        <TableColumn fx:id="appointmentDescripColumn" prefWidth="115.0" text="Descrip." />
                         <TableColumn fx:id="appointmentLocationTableColumn" prefWidth="115.0" text="Location" />
                         <TableColumn fx:id="contactTableColumn" prefWidth="115.0" text="Contact" />
                         <TableColumn fx:id="typeTableColumn" prefWidth="115.0" text="Type" />

@@ -1,9 +1,5 @@
 package Model;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 /**This class is the main data model*/
 public class customerModel {
     /* Here are the Customer Database Columns

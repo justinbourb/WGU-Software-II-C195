@@ -1,8 +1,10 @@
   
 package Controller;
 
+import Helpers.appointmentTableData;
 import Helpers.confirmView;
 import Helpers.customerTableData;
+import Model.appointmentModel;
 import Model.customerModel;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,7 +13,6 @@ import javafx.fxml.Initializable;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
@@ -85,31 +86,34 @@ public class mainController implements Initializable {
     private TextField appointmentsSearchText;
 
     @FXML
-    private TableView<ResultSet> appointmentTable;
+    private TableView<appointmentModel> appointmentTable;
 
     @FXML
-    private TableColumn<ResultSet , Integer> appointmentIDTableColumn;
+    private TableColumn<appointmentModel, String> appointmentIDTableColumn;
 
     @FXML
-    private TableColumn<ResultSet , Integer> custIDTableColumn;
+    private TableColumn<appointmentModel, String> custIDTableColumn;
 
     @FXML
-    private TableColumn<ResultSet , String> titleTableColumn;
+    private TableColumn<appointmentModel, String> titleTableColumn;
 
     @FXML
-    private TableColumn<ResultSet , String> appointmentLocationTableColumn;
+    private TableColumn<appointmentModel, String> appointmentDescripColumn;
 
     @FXML
-    private TableColumn<ResultSet , String> contactTableColumn;
+    private TableColumn<appointmentModel, String> appointmentLocationTableColumn;
 
     @FXML
-    private TableColumn<ResultSet , String> typeTableColumn;
+    private TableColumn<appointmentModel, String> contactTableColumn;
 
     @FXML
-    private TableColumn<ResultSet , String> appointmentStartTableColumn;
+    private TableColumn<appointmentModel, String> typeTableColumn;
 
     @FXML
-    private TableColumn<ResultSet , String> appointmentEndTableColumn;
+    private TableColumn<appointmentModel, String> appointmentStartTableColumn;
+
+    @FXML
+    private TableColumn<appointmentModel, String> appointmentEndTableColumn;
 
     @FXML
     private Button appointmentAddButton;
@@ -250,29 +254,41 @@ public class mainController implements Initializable {
     /**This function is automatically called by Java.  
     It handles data setup for the GUI to display. To generate a tableView
      from a Database, java requires an intermediary step of creating
-     a Object and adding the object to a ObservableList.  Thus we use
-     Model.customerModel to hold data from the database.  Then add the
-     customerModel to an ObservableList then add the list to the tableView.
+     a Object and adding the object to an ObservableList.  Thus we use
+     Model.customerModel and Model.appointmentModel to hold data from the database.
+     Then add the models to an ObservableList then add the list to the tableView.
     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     //check out https://stackoverflow.com/questions/18497699/populate-a-tableview-using-database-in-javafx
 
-        ObservableList<customerModel> data = null;
+        ObservableList<customerModel> customerData = null;
+        ObservableList<appointmentModel> appointmentData = null;
         try {
-            data = customerTableData.getCustomersData();
+            customerData = customerTableData.getCustomersData();
+            appointmentData = appointmentTableData.getAppointmentData();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         customerTable.setPlaceholder(new Label("The table is empty or no search results found."));
         customerTable.setEditable(true);
-        customerTable.setItems(data);
+        customerTable.setItems(customerData);
         customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("ID"));
         customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("name"));
         customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("address"));
         customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("phone"));
 
         appointmentTable.setPlaceholder(new Label("The table is empty or no search results found."));
-      //TODO: test this implementation and modify as needed, see link for an example
+        appointmentTable.setEditable(true);
+        appointmentTable.setItems(appointmentData);
+        appointmentIDTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("appointment_ID"));
+        custIDTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("customer_ID"));
+        titleTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("title"));
+        appointmentDescripColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("description"));
+        appointmentLocationTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("location"));
+        contactTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("contact_ID"));
+        typeTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("type"));
+        appointmentStartTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("start"));
+        appointmentEndTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("end"));
     }
 }
