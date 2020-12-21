@@ -3,6 +3,7 @@ package Helpers;
 import java.sql.Connection;
 import java.sql.*;
 
+/** This class is not used.*/
 public class DatabaseExample {
 
 

@@ -8,9 +8,14 @@ import javafx.collections.ObservableList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
+/** This class generates customerTableData */
 public class customerTableData {
 
+    /**This function pulls the customer data from the database, creates a customerModel object and adds all
+     * objects to an observableArrayList so the database data can be added to a tableView.
+     * @return customerTableData, an observableArrayList
+     * @throws SQLException
+     */
     public static ObservableList<customerModel> getCustomersData() throws SQLException {
         ObservableList<customerModel> customerTableData = FXCollections.observableArrayList();
         String column = "*";

@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.Properties;
 import javax.sql.DataSource;
 
+/** This class is not used.*/
 public class DatabasewithDS {
 
 
