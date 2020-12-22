@@ -2,6 +2,7 @@ package Helpers;
 
 import DAO.read;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,8 +13,9 @@ public class countryTableData {
      * as an ArrayList.  Which can be used to populate the combo box menu."
      * @return data, an ArrayList of first level division names.
      * @throws SQLException
+     * @param connection
      */
-    public static ArrayList getCountryNames() throws SQLException {
+    public static ArrayList getCountryNames(Connection connection) throws SQLException {
         ArrayList data = new ArrayList<String>();
         String column = "*";
         String table = "countries";

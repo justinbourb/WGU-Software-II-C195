@@ -25,6 +25,15 @@ public class read {
         catch (Exception e) {}
         return query.executeQuery();
     }
+
+    public static ResultSet readData(String column, String table, String where, Connection connection) throws SQLException {
+        PreparedStatement query = null;
+        try {
+            query = connection.prepareStatement("SELECT " + column + " FROM " + table + " WHERE " + where);
+        }
+        catch (Exception e) {}
+        return query.executeQuery();
+    }
     
     /**This function reads data from the database and returns the results as a ResultSet.
     * This overload function is for all results (no WHERE clause).
@@ -33,10 +42,20 @@ public class read {
     * @exception SQLException, an SQL Exception
     * @return results, a ResultsSet of the data found
     */
+
     public static ResultSet readData(String column, String table) throws SQLException {
         PreparedStatement query = null;
         try {
             Connection connection = connect.startConnection();
+            query = connection.prepareStatement("SELECT " + column + " FROM " + table);
+        }
+        catch (Exception e) {}
+        return query.executeQuery();
+    }
+
+    public static ResultSet readData(String column, String table, Connection connection) throws SQLException {
+        PreparedStatement query = null;
+        try {
             query = connection.prepareStatement("SELECT " + column + " FROM " + table);
         }
         catch (Exception e) {}

@@ -1,6 +1,7 @@
   
 package Controller;
 
+import DAO.connect;
 import Helpers.appointmentTableData;
 import Helpers.confirmView;
 import Helpers.customerTableData;
@@ -197,6 +198,7 @@ public class mainController implements Initializable {
         customerModel.selectedCustomerIndex = customer.getID();
         customerModel.modifyCustomerButtonClicked = true;
         String resourceURL = "/View/customerView.fxml";
+        connect.closeConnection();
         switchStage.switchStage(actionEvent, resourceURL);
     }
 
@@ -258,35 +260,34 @@ public class mainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     //check out https://stackoverflow.com/questions/18497699/populate-a-tableview-using-database-in-javafx
 
-        ObservableList<customerModel> customerData = null;
-        ObservableList<appointmentModel> appointmentData = null;
-        try {
-            customerData = customerTableData.getCustomersData();
-            appointmentData = appointmentTableData.getAppointmentData();
+        try (var connection = connect.startConnection()){
+            ObservableList<customerModel> customerData = customerTableData.getCustomersData(connection);
+            ObservableList<appointmentModel> appointmentData = appointmentTableData.getAppointmentData(connection);
+
+            customerTable.setPlaceholder(new Label("The table is empty or no search results found."));
+            customerTable.setEditable(true);
+            customerTable.setItems(customerData);
+            customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("ID"));
+            customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("name"));
+            customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("address"));
+            customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("phone"));
+            customerTable.getSelectionModel().select(0);
+
+            appointmentTable.setPlaceholder(new Label("The table is empty or no search results found."));
+            appointmentTable.setEditable(true);
+            appointmentTable.setItems(appointmentData);
+            appointmentIDTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("appointment_ID"));
+            custIDTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("customer_ID"));
+            titleTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("title"));
+            appointmentDescripColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("description"));
+            appointmentLocationTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("location"));
+            contactTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("contact_ID"));
+            typeTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("type"));
+            appointmentStartTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("start"));
+            appointmentEndTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("end"));
+            appointmentTable.getSelectionModel().select(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        customerTable.setPlaceholder(new Label("The table is empty or no search results found."));
-        customerTable.setEditable(true);
-        customerTable.setItems(customerData);
-        customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("ID"));
-        customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("name"));
-        customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("address"));
-        customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("phone"));
-        customerTable.getSelectionModel().select(0);
-
-        appointmentTable.setPlaceholder(new Label("The table is empty or no search results found."));
-        appointmentTable.setEditable(true);
-        appointmentTable.setItems(appointmentData);
-        appointmentIDTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("appointment_ID"));
-        custIDTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("customer_ID"));
-        titleTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("title"));
-        appointmentDescripColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("description"));
-        appointmentLocationTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("location"));
-        contactTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("contact_ID"));
-        typeTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("type"));
-        appointmentStartTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("start"));
-        appointmentEndTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("end"));
-        appointmentTable.getSelectionModel().select(0);
     }
 }
