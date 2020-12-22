@@ -132,6 +132,7 @@ Note: The address text field should not include first-level division and country
      */
     public void countryComboBoxAction(ActionEvent actionEvent) {
         //see https://stackoverflow.com/questions/39539838/javafx-populating-a-combobox-with-data-from-a-mysql-database-stringconverter-b
+        System.out.println(countryComboBox.getSelectionModel().getSelectedIndex());
     }
 
     /**This function controls the first level division combo box.
@@ -169,6 +170,9 @@ Note: The address text field should not include first-level division and country
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        /*TODO: first level division data should load based on country selected.
+            Right now all first level division are being loaded.
+         */
         //prefill if editing
         ArrayList firstLevelDivisionData = null;
         ArrayList countryData = null;

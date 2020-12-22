@@ -28,12 +28,6 @@ public class mainLauncher extends Application {
      * @exception ClassNotFoundException, an exception
      */
     public static void main(String[] args) throws ClassNotFoundException {
-        connect.startConnection();
         launch(args);
-        try {
-            connect.closeConnection();
-        } catch (Exception e) {
-
-        }
     }
 }
