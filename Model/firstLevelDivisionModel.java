@@ -10,6 +10,7 @@ public class firstLevelDivisionModel {
     private String Last_Updated_By;
     private String COUNTRY_ID;
 
+    /** This is the constructor for the first level division Model*/
     public firstLevelDivisionModel(String division_ID, String division, String COUNTRY_ID) {
         this.Division_ID = division_ID;
         this.Division = division;

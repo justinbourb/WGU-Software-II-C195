@@ -19,16 +19,17 @@ public class appointmentModel {
     private String Last_Updated_By;
     private String User_ID;
 
+    /** This is the constructor for the appointment Model*/
     public appointmentModel(String appointment_ID, String customer_ID, String title, String description, String location, String contact_ID, String type, String start, String end) {
-        Appointment_ID = appointment_ID;
-        Customer_ID = customer_ID;
-        Title = title;
-        Description = description;
-        Location = location;
-        Contact_ID = contact_ID;
-        Type = type;
-        Start = start;
-        End = end;
+        this.Appointment_ID = appointment_ID;
+        this.Customer_ID = customer_ID;
+        this.Title = title;
+        this.Description = description;
+        this.Location = location;
+        this.Contact_ID = contact_ID;
+        this.Type = type;
+        this.Start = start;
+        this.End = end;
     }
 
     public String getAppointment_ID() {

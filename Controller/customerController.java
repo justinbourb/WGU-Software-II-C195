@@ -2,10 +2,7 @@ package Controller;
 
 import DAO.create;
 import DAO.read;
-import Helpers.appointmentTableData;
-import Helpers.customerTableData;
-import Helpers.firstLevelDivisionTableData;
-import Helpers.switchStage;
+import Helpers.*;
 import Model.appointmentModel;
 import Model.customerModel;
 import Model.firstLevelDivisionModel;
@@ -173,13 +170,16 @@ Note: The address text field should not include first-level division and country
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //prefill if editing
-        ArrayList data = null;
+        ArrayList firstLevelDivisionData = null;
+        ArrayList countryData = null;
         try {
-            data = firstLevelDivisionTableData.getFirstLevelDivisionNames();
+            firstLevelDivisionData = firstLevelDivisionTableData.getFirstLevelDivisionNames();
+            countryData = countryTableData.getCountryNames();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        firstLevelDivisionComboBox.getItems().addAll((data));
+        firstLevelDivisionComboBox.getItems().addAll((firstLevelDivisionData));
+        countryComboBox.getItems().addAll(countryData);
 
         if (customerModel.modifyCustomerButtonClicked == true){
             System.out.println("Was modify button clicked?: " + customerModel.modifyCustomerButtonClicked);
@@ -192,6 +192,8 @@ Note: The address text field should not include first-level division and country
             String table = "customers";
             String where = "Customer_ID = " + customerModel.selectedCustomerIndex;
             String divisionName = null;
+            String countryID = null;
+            String countryName = null;
 
             ResultSet results = null;
             try {
@@ -206,9 +208,14 @@ Note: The address text field should not include first-level division and country
             //pre-fill the form information from the database
             try {
                 if(results.next()) {
-                    ResultSet divisionResultSet = read.readData("Division", "first_level_divisions", "Division_ID = " + results.getString("Division_ID"));
+                    ResultSet divisionResultSet = read.readData("*", "first_level_divisions", "Division_ID = " + results.getString("Division_ID"));
                     if(divisionResultSet.next()){
                         divisionName = divisionResultSet.getString("Division");
+                        countryID = divisionResultSet.getString("COUNTRY_ID");
+                    }
+                    ResultSet countryResultSet = read.readData("Country", "countries", "Country_ID = " + countryID);
+                    if(countryResultSet.next()){
+                        countryName = countryResultSet.getString("Country");
                     }
                     nameText.setText(results.getString("Customer_Name"));
                     addressText.setText(results.getString("Address"));
@@ -216,11 +223,12 @@ Note: The address text field should not include first-level division and country
                     phoneNumberText.setText(results.getString("Phone"));
                     //results.getString finds the name of the item and Integer.parseInt converts it into an int based on position
                     //countryComboBox.getSelectionModel().select(Integer.parseInt(results.getString("country")));
-                    //firstLevelDivisionComboBox.getSelectionModel().select(Integer.parseInt(results.getString("firstLevelDivision")));
-                    //Combox1.SelectedIndex = Combox1.FindStringExact("test1")
-                    //set the default combobox selection to match the index of the division name.
-                    //The index in the data ArrayList is the same index used in the firstLevelDivisionComboBox
-                    firstLevelDivisionComboBox.getSelectionModel().select(data.indexOf(divisionName));
+
+
+                    //set the default combo box selection to match the index of the division name.
+                    //The index in the firstLevelDivisionData ArrayList is the same index used in the firstLevelDivisionComboBox
+                    firstLevelDivisionComboBox.getSelectionModel().select(firstLevelDivisionData.indexOf(divisionName));
+                    countryComboBox.getSelectionModel().select(countryData.indexOf(countryName));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

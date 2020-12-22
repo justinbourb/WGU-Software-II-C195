@@ -30,7 +30,6 @@ public class firstLevelDivisionTableData {
             firstLevelDivisionModel firstLevelDivision = new firstLevelDivisionModel(division_id,division,COUNTRY_ID);
             firstLevelDivsionTableData.add(firstLevelDivision);
         }
-
         return firstLevelDivsionTableData;
     }
 
@@ -51,5 +50,4 @@ public class firstLevelDivisionTableData {
 
         return data;
     }
-
 }
