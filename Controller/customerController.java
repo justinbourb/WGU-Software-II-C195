@@ -2,15 +2,25 @@ package Controller;
 
 import DAO.create;
 import DAO.read;
+import Helpers.appointmentTableData;
+import Helpers.customerTableData;
+import Helpers.firstLevelDivisionTableData;
 import Helpers.switchStage;
+import Model.appointmentModel;
 import Model.customerModel;
+import Model.firstLevelDivisionModel;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+
+import java.io.DataOutput;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.WatchService;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.DoubleAccumulator;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -69,7 +79,7 @@ public class customerController implements Initializable {
     private ComboBox<?> countryComboBox;
 
     @FXML
-    private ComboBox<?> firstLevelDivisionComboBox;
+    private ComboBox<firstLevelDivisionModel> firstLevelDivisionComboBox;
 
 /* Requirements
     •  Customer records and appointments can be added, updated, and deleted.
@@ -143,10 +153,9 @@ Note: The address text field should not include first-level division and country
         String address = addressText.getText();
         String postalCode = postalCodeText.getText();
         String phone = phoneNumberText.getText();
-        //cast as String
-        String country = (String) countryComboBox.getValue();
-        String firstLevelDivision = (String) firstLevelDivisionComboBox.getValue();
-        //TODO: correct how create.createData is called
+        String country = countryComboBox.getItems().toString();
+        String firstLevelDivision = firstLevelDivisionComboBox.getItems().toString();
+
         //insert values into database
         try {
             create.createData("Customers",
@@ -164,17 +173,26 @@ Note: The address text field should not include first-level division and country
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //prefill if editing
+        ArrayList data = null;
+        try {
+            data = firstLevelDivisionTableData.getFirstLevelDivisionNames();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        firstLevelDivisionComboBox.getItems().addAll((data));
+
         if (customerModel.modifyCustomerButtonClicked == true){
             System.out.println("Was modify button clicked?: " + customerModel.modifyCustomerButtonClicked);
-            System.out.println("Line selected: " + customerModel.selectedCustomerIndex);
+            System.out.println("Customer ID selected: " + customerModel.selectedCustomerIndex);
             titleLabel.setText("Edit Customer");
+
             //pull data from database where selected customer ID in the mainview tableview
             //matches the ID in the customer table of the database
             String column = "*";
             String table = "customers";
-            //TODO: I want this line to find the customer ID selected
-            //String where = "Customer_ID = " + mainModel.selectedCustomerIndex.ID;
-            String where = "Customer_ID = 1";
+            String where = "Customer_ID = " + customerModel.selectedCustomerIndex;
+            String divisionName = null;
+
             ResultSet results = null;
             try {
                 results = read.readData(column, table, where);
@@ -182,23 +200,27 @@ Note: The address text field should not include first-level division and country
                 e.printStackTrace();
             }
 
-            //TODO: pull data from Database
-            //pull all info into ResultSet and filter results per category?
             /* Here are the Customer Database Columns
             Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID
              */
-
+            //pre-fill the form information from the database
             try {
                 if(results.next()) {
-                    
+                    ResultSet divisionResultSet = read.readData("Division", "first_level_divisions", "Division_ID = " + results.getString("Division_ID"));
+                    if(divisionResultSet.next()){
+                        divisionName = divisionResultSet.getString("Division");
+                    }
                     nameText.setText(results.getString("Customer_Name"));
                     addressText.setText(results.getString("Address"));
                     postalCodeText.setText(results.getString("Postal_Code"));
                     phoneNumberText.setText(results.getString("Phone"));
-                    //results.getString finds the name of the item and Integer.parseInt converts it into an int based on posistion
-                    countryComboBox.getSelectionModel().select(Integer.parseInt(results.getString("country")));
-                    firstLevelDivisionComboBox.getSelectionModel().select(Integer.parseInt(results.getString("firstLevelDivision")));
-
+                    //results.getString finds the name of the item and Integer.parseInt converts it into an int based on position
+                    //countryComboBox.getSelectionModel().select(Integer.parseInt(results.getString("country")));
+                    //firstLevelDivisionComboBox.getSelectionModel().select(Integer.parseInt(results.getString("firstLevelDivision")));
+                    //Combox1.SelectedIndex = Combox1.FindStringExact("test1")
+                    //set the default combobox selection to match the index of the division name.
+                    //The index in the data ArrayList is the same index used in the firstLevelDivisionComboBox
+                    firstLevelDivisionComboBox.getSelectionModel().select(data.indexOf(divisionName));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

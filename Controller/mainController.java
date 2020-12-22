@@ -187,7 +187,14 @@ public class mainController implements Initializable {
      * @throws IOException an exception
      */
     public void editCustomerButtonAction(ActionEvent actionEvent) throws IOException {
-        customerModel.selectedCustomerIndex = customerTable.getSelectionModel().getFocusedIndex();
+        //get the customer ID from the selected row
+        customerModel customer = customerTable.getSelectionModel().getSelectedItem();
+        //if nothing is selected, use the first row
+        if (customer == null){
+            customerTable.getSelectionModel().select(0);
+            customer = customerTable.getSelectionModel().getSelectedItem();
+        }
+        customerModel.selectedCustomerIndex = customer.getID();
         customerModel.modifyCustomerButtonClicked = true;
         String resourceURL = "/View/customerView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
@@ -198,8 +205,16 @@ public class mainController implements Initializable {
      * @throws IOException an exception
      */
     public void editAppointmentButtonAction(ActionEvent actionEvent) throws IOException {
-        customerModel.selectedAppointmentIndex = appointmentTable.getSelectionModel().getFocusedIndex();
+        //get the appointment ID from the selected row
+        appointmentModel appointment = appointmentTable.getSelectionModel().getSelectedItem();
+        //if nothing is selected, use the first row
+        if (appointment == null){
+            appointmentTable.getSelectionModel().select(0);
+            appointment = appointmentTable.getSelectionModel().getSelectedItem();
+        }
+        customerModel.selectedAppointmentIndex = appointment.getAppointment_ID();
         customerModel.modifyAppointmentButtonClicked = true;
+
         String resourceURL = "/View/appointmentView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -258,6 +273,7 @@ public class mainController implements Initializable {
         customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("name"));
         customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("address"));
         customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("phone"));
+        customerTable.getSelectionModel().select(0);
 
         appointmentTable.setPlaceholder(new Label("The table is empty or no search results found."));
         appointmentTable.setEditable(true);
@@ -271,5 +287,6 @@ public class mainController implements Initializable {
         typeTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("type"));
         appointmentStartTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("start"));
         appointmentEndTableColumn.setCellValueFactory(new PropertyValueFactory<appointmentModel, String>("end"));
+        appointmentTable.getSelectionModel().select(0);
     }
 }

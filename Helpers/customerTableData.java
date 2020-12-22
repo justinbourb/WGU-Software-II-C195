@@ -27,8 +27,9 @@ public class customerTableData {
             String name = results.getString("Customer_Name");
             String address = results.getString("Address");
             String phone = results.getString("Phone");
+            String divisionID = results.getString("Division_ID");
 
-            customerModel customer = new customerModel(ID, name, address, phone);
+            customerModel customer = new customerModel(ID, name, address, phone, divisionID);
             customerTableData.add(customer);
         }
         return customerTableData;

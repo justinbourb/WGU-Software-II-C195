@@ -1,6 +1,6 @@
 package Model;
 
-/**This class holds the appointmentModel*/
+/**This class stores the data from the database in a Java Object*/
 public class appointmentModel {
     /** This is the constructor for the appointment Model*/
 

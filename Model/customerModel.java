@@ -1,16 +1,16 @@
 package Model;
 
-/**This class is the main data model*/
+/**This class stores the data from the database in a Java Object*/
 public class customerModel {
     /* Here are the Customer Database Columns
         Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID
     */
     /**holds the selectedCustomerIndex*/
-    public static int selectedCustomerIndex = 0;
+    public static String selectedCustomerIndex;
     /** was the modify button clicked? */
     public static boolean modifyCustomerButtonClicked = false;
     /** holds the selectedProductIndex */
-    public static int selectedAppointmentIndex = 0;
+    public static String selectedAppointmentIndex;
     /** was the modify button clicked? */
     public static boolean modifyAppointmentButtonClicked = false;
 
@@ -18,13 +18,15 @@ public class customerModel {
     private String name;
     private String address;
     private String phone;
+    private String divisionID;
 
     /** This is the constructor for the customer Model*/
-    public customerModel(String ID, String name, String address, String phone) {
+    public customerModel(String ID, String name, String address, String phone, String divisionID) {
         this.ID = ID;
         this.name = name;
         this.address = address;
         this.phone = phone;
+        this.divisionID = divisionID;
     }
 
     public String getID() {
