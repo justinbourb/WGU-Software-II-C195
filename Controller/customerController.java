@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -141,6 +142,10 @@ Note: The address text field should not include first-level division and country
     public void firstLevelDivisionComboBoxAction(ActionEvent actionEvent) {
     }
 
+    private void populateComboBoxes(Connection connection){
+
+    }
+
     /**
      * This function controls the save button.
      *
@@ -177,6 +182,10 @@ Note: The address text field should not include first-level division and country
             Right now all first level division are being loaded.
          */
 
+        //It should load the countries list on load
+        //It should disable the first level division list until a country is picked
+        //It should populate the first level division list after a country is picked
+
         //prefill if editing
         try (var connection = connect.startConnection()) {
 
@@ -206,9 +215,9 @@ Note: The address text field should not include first-level division and country
                 String countryID = null;
                 String countryName = null;
 
-                ResultSet results = null;
+                ResultSet customerResults = null;
                 try {
-                    results = read.readData(column, table, where, connection);
+                    customerResults = read.readData(column, table, where, connection);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -220,8 +229,8 @@ Note: The address text field should not include first-level division and country
 
 
                 try {
-                    if (results.next()) {
-                        ResultSet divisionResultSet = read.readData("*", "first_level_divisions", "Division_ID = " + results.getString("Division_ID"), connection);
+                    if (customerResults.next()) {
+                        ResultSet divisionResultSet = read.readData("*", "first_level_divisions", "Division_ID = " + customerResults.getString("Division_ID"), connection);
                         if (divisionResultSet.next()) {
                             divisionName = divisionResultSet.getString("Division");
                             countryID = divisionResultSet.getString("COUNTRY_ID");
@@ -230,10 +239,10 @@ Note: The address text field should not include first-level division and country
                         if (countryResultSet.next()) {
                             countryName = countryResultSet.getString("Country");
                         }
-                        nameText.setText(results.getString("Customer_Name"));
-                        addressText.setText(results.getString("Address"));
-                        postalCodeText.setText(results.getString("Postal_Code"));
-                        phoneNumberText.setText(results.getString("Phone"));
+                        nameText.setText(customerResults.getString("Customer_Name"));
+                        addressText.setText(customerResults.getString("Address"));
+                        postalCodeText.setText(customerResults.getString("Postal_Code"));
+                        phoneNumberText.setText(customerResults.getString("Phone"));
                         //results.getString finds the name of the item and Integer.parseInt converts it into an int based on position
                         //countryComboBox.getSelectionModel().select(Integer.parseInt(results.getString("country")));
 
