@@ -278,7 +278,7 @@ public class mainController implements Initializable {
 
             customerTable.setPlaceholder(new Label("The table is empty or no search results found."));
             customerTable.setEditable(true);
-            customerTable.setItems(customerModel.customerData);
+            customerTable.setItems(customerData);
             customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("ID"));
             customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("name"));
             customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("address"));

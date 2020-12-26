@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /** This class generates customerTableData */
 public class customerTableData {
@@ -64,5 +65,16 @@ public class customerTableData {
         }
         return customerTableData;
     }
+    public static ArrayList getCustomerNames(Connection connection) throws SQLException {
+        ArrayList customerNameArrayList = new ArrayList();
+        String column = "Customer_Name";
+        String table = "customers";
+        ResultSet results = read.readData(column, table, connection);
 
+        while (results.next()) {
+            String customerName = results.getString("Customer_Name");
+            customerNameArrayList.add(customerName);
+        }
+        return customerNameArrayList;
+    }
 }

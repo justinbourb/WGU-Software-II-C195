@@ -1,5 +1,9 @@
 package Controller;
 
+import DAO.connect;
+import Helpers.contactTableData;
+import Helpers.countryTableData;
+import Helpers.customerTableData;
 import Helpers.switchStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,6 +16,9 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class appointmentController implements Initializable {
@@ -90,39 +97,46 @@ public class appointmentController implements Initializable {
 /* Requirements
 a.  Write code that enables the user to add, update, and delete appointments. The code should also include the following functionalities:
 
-•  A contact name is assigned to an appointment using a drop-down menu or combo box.
-
-•  A customer name is assigned to an appointment using a drop-down menu or combo box.
-
 •  A custom message is displayed in the user interface with the Appointment_ID and type of appointment canceled.
-
-•  The Appointment_ID is auto-generated and disabled throughout the application.
-
-•  The Customer_ID is auto-generated and disabled throughout the application.
-
-•  When adding and updating an appointment, text fields are used to record the following data: Appointment_ID, title, description, location, contact, type, start date and time, end date and time, Customer_ID, and User_ID.
 
 •  All of the original appointment information is displayed on the update form in local time zone.
 
-•  All of the appointment fields can be updated except Appointment_ID, which must be disabled.
 */
 
+    /** This function handles the cancel button
+     *
+     * @param actionEvent, an ActionEvent
+     * @throws IOException, an Exception
+     */
     @FXML
     void cancelButtonAction(ActionEvent actionEvent) throws IOException {
         String resourceURL = "/View/mainView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
 
+    /**This function will fill the contactIDText field when a contact is selected.
+     */
     @FXML
-    void contactComboBoxAction(ActionEvent actionEvent) {
+    void contactComboBoxAction() {
+        //It should fill contactIDText with the contact id
+    }
+
+    /**This function will fill the customerIDText field when a contact is selected.
+     */
+    @FXML
+    void customerComboBoxAction() {
+        //It should fill the cusomterIDText with the customer id
+    }
+
+    private void prepopulateAppointmentData(Connection connection) {
 
     }
 
-    @FXML
-    void customerComboBoxAction(ActionEvent actionEvent) {
-
-    }
-
+    /**This function handles the save button
+     *
+     * @param actionEvent, an ActionEvent
+     * @throws IOException, an Exception
+     */
     @FXML
     void saveButtonAction(ActionEvent actionEvent) throws IOException {
         //add save logic
@@ -130,10 +144,31 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         switchStage.switchStage(actionEvent, resourceURL);
     }
 
-
+    /**This function is automatically called by Java.
+     It handles data setup for the GUI to display.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //prefill data if editing
+        //It should prefill customer ID and contact ID
+        //It should use try with resources to automatically close the database connection
+        //It should prefill appoint data if editing
+        try {
+            connect.closeConnection();
+        } catch (Exception e) {}
+        //It should fill countries combo box on load
+        //It should use try with resources to close connection automatically
+        try (var connection = connect.startConnection()) {
+            ArrayList customerNames = customerTableData.getCustomerNames(connection);
+            ArrayList contactNames = contactTableData.getContactNames(connection);
+            customerComboBox.getItems().addAll(customerNames);
+            contactComboBox.getItems().addAll(contactNames);
+            //It should populate customer information if the edit button was clicked
+            prepopulateAppointmentData(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 
