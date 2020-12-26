@@ -31,8 +31,9 @@
                     <columns>
                       <TableColumn fx:id="customerIDTableColumn" prefWidth="75.0" text="Customer ID" />
                       <TableColumn fx:id="customerNameTableColumn" prefWidth="272.0" text="Name" />
-                        <TableColumn fx:id="customerAddressTableColumn" prefWidth="417.0" text="Address" />
-                        <TableColumn fx:id="customerPhoneTableColumn" prefWidth="127.0" text="Phone" />
+                        <TableColumn fx:id="customerAddressTableColumn" prefWidth="200.0" text="Address" />
+                        <TableColumn fx:id="customerDivisionTableColumn" prefWidth="200.0" text="Division" />
+                        <TableColumn fx:id="customerPhoneTableColumn" prefWidth="140.0" text="Phone" />
                     </columns>
                   </TableView>
                   <Button fx:id="addCustomerButton" layoutX="726.0" layoutY="267.0" mnemonicParsing="false" onAction="#addCustomersButtonAction" prefHeight="25.0" prefWidth="54.0" text="Add" />

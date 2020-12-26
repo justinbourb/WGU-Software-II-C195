@@ -1,5 +1,8 @@
 package Model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**This class stores the data from the database in a Java Object*/
 public class customerModel {
     /* Here are the Customer Database Columns
@@ -19,14 +22,16 @@ public class customerModel {
     private String address;
     private String phone;
     private String divisionID;
+    private String divisionName;
 
     /** This is the constructor for the customer Model*/
-    public customerModel(String ID, String name, String address, String phone, String divisionID) {
+    public customerModel(String ID, String name, String address, String phone, String divisionID, String divisionName) {
         this.ID = ID;
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.divisionID = divisionID;
+        this.divisionName = divisionName;
     }
 
     public String getID() {
@@ -59,5 +64,20 @@ public class customerModel {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getDivisionName() {
+        return divisionName;
+    }
+
+    public void setDivisionName(String divisionName) {
+        this.divisionName = divisionName;
+    }
+    public String getDivisionID() {
+        return divisionID;
+    }
+
+    public void setDivisionID(String divisionID) {
+        this.divisionID = divisionID;
     }
 }

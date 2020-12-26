@@ -30,7 +30,12 @@ public class customerTableData {
             String phone = results.getString("Phone");
             String divisionID = results.getString("Division_ID");
 
-            customerModel customer = new customerModel(ID, name, address, phone, divisionID);
+            String divisionName = null;
+            ResultSet nameResults = read.readData("Division", "first_level_divisions", "Division_ID = " + divisionID);
+            if (nameResults.next()){
+                divisionName = nameResults.getString("Division");
+            }
+            customerModel customer = new customerModel(ID, name, address, phone, divisionID, divisionName);
             customerTableData.add(customer);
         }
         return customerTableData;
@@ -49,7 +54,12 @@ public class customerTableData {
             String phone = results.getString("Phone");
             String divisionID = results.getString("Division_ID");
 
-            customerModel customer = new customerModel(ID, name, address, phone, divisionID);
+            String divisionName = null;
+            ResultSet nameResults = read.readData("Division", "first_level_divisions", "Division_ID = " + divisionID, connection);
+            if (nameResults.next()){
+                divisionName = nameResults.getString("Division");
+            }
+            customerModel customer = new customerModel(ID, name, address, phone, divisionID, divisionName);
             customerTableData.add(customer);
         }
         return customerTableData;

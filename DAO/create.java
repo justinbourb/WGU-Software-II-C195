@@ -24,7 +24,6 @@ public class create {
         */
         try(Connection connection = connect.startConnection()) {
             String statement = "INSERT INTO " + table + " (" + columns + ")" + " VALUES (" + values + ")";
-            System.out.println(statement);
             PreparedStatement query = connection.prepareStatement(statement);
             query.executeUpdate();
         } catch (Exception e) {

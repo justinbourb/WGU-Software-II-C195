@@ -2,6 +2,8 @@
 package Controller;
 
 import DAO.connect;
+import DAO.delete;
+import DAO.read;
 import Helpers.appointmentTableData;
 import Helpers.confirmView;
 import Helpers.customerTableData;
@@ -14,6 +16,7 @@ import javafx.fxml.Initializable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
@@ -64,6 +67,9 @@ public class mainController implements Initializable {
 
     @FXML
     private TableColumn<customerModel, String> customerPhoneTableColumn;
+
+    @FXML
+    private TableColumn<customerModel, String> customerDivisionTableColumn;
 
     @FXML
     private Button addCustomerButton;
@@ -161,12 +167,14 @@ public class mainController implements Initializable {
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
      */
     @FXML
-    void deleteCustomersButtonAction(ActionEvent actionEvent) {
+    void deleteCustomersButtonAction(ActionEvent actionEvent) throws SQLException, IOException {
         String confirmText = "Pressing ok will delete this customer.";
         String resourceURL = "/View/mainView.fxml";
         boolean wasOkPressed = confirmView.showAlert(confirmText);
         if (wasOkPressed){
-            //DELETE CUSTOMER
+            customerModel customer = customerTable.getSelectionModel().getSelectedItem();
+            delete.deleteData("customers", "Customer_ID = " + customer.getID());
+            switchStage.switchStage(actionEvent, resourceURL);
         }
     }
 
@@ -174,7 +182,7 @@ public class mainController implements Initializable {
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
      */
     @FXML
-    void deleteAppointmentButtonAction(ActionEvent actionEvent) {
+    void deleteAppointmentButtonAction(ActionEvent actionEvent) throws SQLException {
         String confirmText = "Pressing ok will delete this appointment.";
         String resourceURL = "/View/mainView.fxml";
         boolean wasOkPressed = confirmView.showAlert(confirmText);
@@ -218,7 +226,9 @@ public class mainController implements Initializable {
         }
         customerModel.selectedAppointmentIndex = appointment.getAppointment_ID();
         customerModel.modifyAppointmentButtonClicked = true;
-
+        try {
+            connect.closeConnection();
+        } catch (Exception e){}
         String resourceURL = "/View/appointmentView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -260,20 +270,23 @@ public class mainController implements Initializable {
     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-    //check out https://stackoverflow.com/questions/18497699/populate-a-tableview-using-database-in-javafx
 
         try (var connection = connect.startConnection()){
             ObservableList<customerModel> customerData = customerTableData.getCustomersData(connection);
+            //customerModel.customerData = customerTableData.getCustomersData(connection);
             ObservableList<appointmentModel> appointmentData = appointmentTableData.getAppointmentData(connection);
 
             customerTable.setPlaceholder(new Label("The table is empty or no search results found."));
             customerTable.setEditable(true);
-            customerTable.setItems(customerData);
+            customerTable.setItems(customerModel.customerData);
             customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("ID"));
             customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("name"));
             customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("address"));
             customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("phone"));
+            customerDivisionTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel, String>("divisionName"));
             customerTable.getSelectionModel().select(0);
+
+
 
             appointmentTable.setPlaceholder(new Label("The table is empty or no search results found."));
             appointmentTable.setEditable(true);

@@ -15,13 +15,13 @@ public class delete {
     * @exception SQLException, an SQL Exception
     * @return results, a ResultsSet of the data found
     */
-    public static ResultSet deleteData(String table, String where) throws SQLException {
+    public static void deleteData(String table, String where) throws SQLException {
         /* Example usage:
         DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste';
         */
         Connection connection = connect.startConnection();
         PreparedStatement query = connection.prepareStatement("DELETE FROM " + table + " WHERE " + where);
-        return query.executeQuery();
+        query.executeUpdate();
     }
 
 }

@@ -79,38 +79,11 @@ public class customerController implements Initializable {
 
 -  When deleting a customer record, all of the customer’s appointments must be deleted first, due to foreign key constraints.
 
-•  When adding and updating a customer, text fields are used to collect the following data: customer name, address, postal code, and phone number.
-
--  Customer IDs are auto-generated, and first-level division (i.e., states, provinces) and country data are collected using separate combo boxes.
-
-
-Note: The address text field should not include first-level division and country data. Please use the following examples to format addresses:
-
-•  U.S. address: 123 ABC Street, White Plains
-
-•  Canadian address: 123 ABC Street, Newmarket
-
-•  UK address: 123 ABC Street, Greenwich, London
-
-
--  When updating a customer, the customer data autopopulates in the form.
-
-
-•  Country and first-level division data is prepopulated in separate combo boxes or lists in the user interface for the user to choose. The first-level list should be filtered by the user’s selection of a country (e.g., when choosing U.S., filter so it only shows states).
-
-•  All of the original customer information is displayed on the update form.
-
--  Customer_ID must be disabled.
-
-•  All of the fields can be updated except for Customer_ID.
-
 •  Customer data is displayed using a TableView, including first-level division data. A list of all the customers and their information may be viewed in a TableView, and updates of the data can be performed in text fields on the form.
 
 •  When a customer record is deleted, a custom message should display in the user interface.
      */
 
-    //TODO: update customerView.FXML - correct variable names
-    //TODO: verify database column names and test functionality
 
     /**
      * This function controls the cancel button.
@@ -155,9 +128,6 @@ Note: The address text field should not include first-level division and country
     public void firstLevelDivisionComboBoxAction(ActionEvent actionEvent) {
     }
 
-    private void populateComboBoxes(Connection connection){
-
-    }
 
     /**
      * This function controls the save button.
@@ -173,9 +143,7 @@ Note: The address text field should not include first-level division and country
         String phone = phoneNumberText.getText();
         String country = countryComboBox.getValue().toString();
         String firstLevelDivision = String.valueOf(firstLevelDivisionComboBox.getValue());
-        System.out.println("firstLevelDivision is: " + firstLevelDivision);
         String divisionID = firstLevelDivisionTableData.getFirstLevelDivisionID(firstLevelDivision);
-        System.out.println("divisionID is: " + divisionID);
 
         //insert values into database if creating a new customer
         if (customerModel.modifyCustomerButtonClicked == false) {
