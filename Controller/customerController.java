@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
+import java.io.DataOutput;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -117,7 +118,10 @@ Note: The address text field should not include first-level division and country
      * @throws IOException an exception
      */
     public void cancelButtonAction(ActionEvent actionEvent) throws IOException {
-        connect.closeConnection();
+        try {
+            connect.closeConnection();
+        } catch (Exception e) {}
+
         //reset edit button flag
         customerModel.modifyCustomerButtonClicked = false;
         String resourceURL = "/View/mainView.fxml";
@@ -125,13 +129,21 @@ Note: The address text field should not include first-level division and country
     }
 
     /**
-     * This function controls the country combo box.
-     *
-     * @param actionEvent, a JavaFX ActionEvent provided by a combo box
+     * This function will populate the first level division data based
+     * on which country is selected.
      */
-    public void countryComboBoxAction(ActionEvent actionEvent) {
-        //see https://stackoverflow.com/questions/39539838/javafx-populating-a-combobox-with-data-from-a-mysql-database-stringconverter-b
-        System.out.println(countryComboBox.getSelectionModel().getSelectedIndex());
+    public void countryComboBoxAction() {
+        Integer countryID = countryComboBox.getSelectionModel().getSelectedIndex() + 1;
+        try (var connection = connect.startConnection()) {
+            //remove any pre-existing data
+            firstLevelDivisionComboBox.getItems().clear();
+            //get data from database
+            ArrayList firstLevelDivisionData = firstLevelDivisionTableData.getFirstLevelDivisionNames(connection, String.valueOf(countryID));
+            //populate firstLevelDivisionComboBox
+            firstLevelDivisionComboBox.getItems().addAll(firstLevelDivisionData);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -176,92 +188,60 @@ Note: The address text field should not include first-level division and country
         switchStage.switchStage(actionEvent, resourceURL);
     }
 
+    /**This function will prepopulate the customer text fields if the edit button was clicked.
+     *
+     * @param connection, a database Connection
+     * @throws SQLException, an exception
+     */
+    private void prepopulateCustomerData(Connection connection) throws SQLException {
+        if (customerModel.modifyCustomerButtonClicked == true) {
+            int countryID;
+            String divisionName = null;
+            titleLabel.setText("Edit Customer");
+            //pull the customer data from the database
+            ResultSet customerResults = read.readData("*", "customers", "Customer_ID = " + customerModel.selectedCustomerIndex, connection);
+            //fill in the text boxes
+            if (customerResults.next()) {
+                idText.setText(customerResults.getString("Customer_ID"));
+                nameText.setText(customerResults.getString("Customer_Name"));
+                addressText.setText(customerResults.getString("Address"));
+                postalCodeText.setText(customerResults.getString("Postal_Code"));
+                phoneNumberText.setText(customerResults.getString("Phone"));
+                //find the division name and country ID based on the Division_ID field in the customer table
+                ResultSet divisionResultSet = read.readData("*", "first_level_divisions", "Division_ID = " + customerResults.getString("Division_ID"), connection);
+                if (divisionResultSet.next()) {
+                    divisionName = divisionResultSet.getString("Division");
+                    countryID = Integer.parseInt(divisionResultSet.getString("COUNTRY_ID"));
+                    //select the correct country in the combo box
+                    countryComboBox.getSelectionModel().select(countryID - 1);
+                    //fill up first level division data
+                    countryComboBoxAction();
+                    //select the correct first level division in the combo box
+                    firstLevelDivisionComboBox.getSelectionModel().select(firstLevelDivisionComboBox.getItems().indexOf(divisionName));
+                }
+            }
+        }
+    }
+
+    /**This function is automatically called by Java.
+     It handles data setup for the GUI to display.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        /*TODO: first level division data should load based on country selected.
-            Right now all first level division are being loaded.
-         */
-
-        //It should load the countries list on load
-        //It should disable the first level division list until a country is picked
-        //It should populate the first level division list after a country is picked
-
-        //prefill if editing
+        try {
+            connect.closeConnection();
+        } catch (Exception e) {}
+        //It should fill countries combo box on load
+        //It should use try with resources to close connection automatically
         try (var connection = connect.startConnection()) {
-
-            ArrayList firstLevelDivisionData = null;
-            ArrayList countryData = null;
-            try {
-                firstLevelDivisionData = firstLevelDivisionTableData.getFirstLevelDivisionNames(connection);
-                countryData = countryTableData.getCountryNames(connection);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            firstLevelDivisionComboBox.getItems().addAll((firstLevelDivisionData));
-            countryComboBox.getItems().addAll(countryData);
-
-            if (customerModel.modifyCustomerButtonClicked == true) {
-                System.out.println("Was modify button clicked?: " + customerModel.modifyCustomerButtonClicked);
-                System.out.println("Customer ID selected: " + customerModel.selectedCustomerIndex);
-                titleLabel.setText("Edit Customer");
-
-                //pull data from database where selected customer ID in the mainview tableview
-                //matches the ID in the customer table of the database
-                String column = "*";
-                String table = "customers";
-                String where = "Customer_ID = " + customerModel.selectedCustomerIndex;
-                String divisionName = null;
-                String countryID = null;
-                String countryName = null;
-
-                ResultSet customerResults = null;
-                try {
-                    customerResults = read.readData(column, table, where, connection);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-                /* Here are the Customer Database Columns
-                Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID
-                 */
-                //pre-fill the form information from the database
-
-
-                try {
-                    if (customerResults.next()) {
-                        ResultSet divisionResultSet = read.readData("*", "first_level_divisions", "Division_ID = " + customerResults.getString("Division_ID"), connection);
-                        if (divisionResultSet.next()) {
-                            divisionName = divisionResultSet.getString("Division");
-                            countryID = divisionResultSet.getString("COUNTRY_ID");
-                        }
-                        ResultSet countryResultSet = read.readData("Country", "countries", "Country_ID = " + countryID, connection);
-                        if (countryResultSet.next()) {
-                            countryName = countryResultSet.getString("Country");
-                        }
-                        nameText.setText(customerResults.getString("Customer_Name"));
-                        addressText.setText(customerResults.getString("Address"));
-                        postalCodeText.setText(customerResults.getString("Postal_Code"));
-                        phoneNumberText.setText(customerResults.getString("Phone"));
-                        //results.getString finds the name of the item and Integer.parseInt converts it into an int based on position
-                        //countryComboBox.getSelectionModel().select(Integer.parseInt(results.getString("country")));
-
-
-                        //set the default combo box selection to match the index of the division name.
-                        //The index in the firstLevelDivisionData ArrayList is the same index used in the firstLevelDivisionComboBox
-                        firstLevelDivisionComboBox.getSelectionModel().select(firstLevelDivisionData.indexOf(divisionName));
-                        countryComboBox.getSelectionModel().select(countryData.indexOf(countryName));
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            //if editing bracket
-            }
-            //try with resources bracket
-        } catch (Exception e) {
+           ArrayList countryData = countryTableData.getCountryNames(connection);
+           countryComboBox.getItems().addAll(countryData);
+           //It should populate customer information if the edit button was clicked
+           prepopulateCustomerData(connection);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-    //initialize bracket
     }
+
 //class bracket
 }

@@ -198,7 +198,9 @@ public class mainController implements Initializable {
         customerModel.selectedCustomerIndex = customer.getID();
         customerModel.modifyCustomerButtonClicked = true;
         String resourceURL = "/View/customerView.fxml";
-        connect.closeConnection();
+        try {
+            connect.closeConnection();
+        } catch (Exception e){}
         switchStage.switchStage(actionEvent, resourceURL);
     }
 

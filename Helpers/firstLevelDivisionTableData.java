@@ -34,16 +34,18 @@ public class firstLevelDivisionTableData {
         return firstLevelDivsionTableData;
     }
 
-    /** This function gets the names of all the first level divisions and returns them
+    /** This function gets the names of all the first level divisions
+     *  for a specific country and returns them
      * as an ArrayList.  Which can be used to populate the combo box menu."
      * @return data, an ArrayList of first level division names.
      * @throws SQLException
      */
-    public static ArrayList getFirstLevelDivisionNames(Connection connection) throws SQLException {
+    public static ArrayList getFirstLevelDivisionNames(Connection connection, String country_ID) throws SQLException {
         ArrayList data = new ArrayList<String>();
         String column = "*";
         String table = "first_level_divisions";
-        ResultSet results = read.readData(column, table, connection);
+        String where = "COUNTRY_ID = " + country_ID;
+        ResultSet results = read.readData(column, table, where, connection);
 
         while(results.next()){
             data.add(results.getString("Division"));

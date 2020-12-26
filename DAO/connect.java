@@ -3,6 +3,7 @@ package DAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 /*
 Connection String
 Server name: wgudb.ucertify.com
@@ -26,6 +27,7 @@ public class connect {
     private static Connection connection = null;
     private static final String username = "U06rpB";
     private static final String password = "53688851020";
+    public static ArrayList<Connection> allConnections = new ArrayList();
 
     /**This function starts the database connection.
      * @return connection - a database connection*/
@@ -33,7 +35,8 @@ public class connect {
         try {
             Class.forName(MYSQLJBCDriver);
             connection = DriverManager.getConnection(jdbcURL, username, password);
-            System.out.println("Connection successful.");
+            allConnections.add(connection);
+            System.out.println("Connection successful. " + connection);
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -43,8 +46,11 @@ public class connect {
     /**This function closes the database connection.*/
     public static void closeConnection() {
         try {
-            connection.close();
-            System.out.println("Connection closed.");
+            for(Connection eachConnection : allConnections) {
+                eachConnection.close();
+                System.out.println("Connection closed." + eachConnection);
+                allConnections.remove(eachConnection);
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
