@@ -28,10 +28,6 @@
             <TextField fx:id="nameText" layoutX="140.0" layoutY="128.0" prefHeight="25.0" prefWidth="210.0" />
             <TextField fx:id="addressText" layoutX="140.0" layoutY="165.0" prefHeight="25.0" prefWidth="210.0" />
             <TextField fx:id="postalCodeText" layoutX="434.0" layoutY="165.0" />
-            <TextField fx:id="phoneNumberText" layoutX="141.0" layoutY="237.0" prefHeight="25.0" prefWidth="210.0" />
-            <Button fx:id="saveButton" layoutX="321.0" layoutY="306.0" onAction="#saveButtonAction" text="Save" />
-            <Button fx:id="cancelButton" layoutX="384.0" layoutY="306.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
-            <TextArea fx:id="errorTextArea" layoutX="310.0" layoutY="82.0" prefHeight="142.0" prefWidth="323.0" visible="false" />
             <ComboBox fx:id="countryComboBox" layoutX="141.0" layoutY="200.0" onAction="#countryComboBoxAction" prefHeight="25.0" prefWidth="210.0" promptText="Select Country">
                <padding>
                   <Insets left="50.0" />
@@ -42,6 +38,10 @@
                   <Insets left="20.0" />
                </padding>
             </ComboBox>
+            <TextField fx:id="phoneNumberText" layoutX="141.0" layoutY="237.0" prefHeight="25.0" prefWidth="210.0" />
+            <Button fx:id="saveButton" layoutX="321.0" layoutY="306.0" onAction="#saveButtonAction" text="Save" />
+            <Button fx:id="cancelButton" layoutX="384.0" layoutY="306.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
+            <TextArea fx:id="errorTextArea" layoutX="310.0" layoutY="82.0" prefHeight="142.0" prefWidth="323.0" visible="false" />
       </children>
     </AnchorPane>
   </children>

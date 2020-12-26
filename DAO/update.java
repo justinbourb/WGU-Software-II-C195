@@ -11,20 +11,22 @@ import java.sql.SQLException;
 public class update {
   
     /**This function updates data from the database and returns the results as a ResultSet.
-    * @param column, the column name as a string
     * @param table, the table as a string
+    * @param set, the data to set
     * @param where, the where as a string
     * @exception SQLException, an SQL Exception
     * @return results, a ResultsSet of the data found
     */
-    public static ResultSet updateData(String column, String table, String where) throws SQLException {
+    public static void updateData(String table, String set, String where) throws SQLException {
         /* Example usage:
         UPDATE Customers
         SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
         WHERE CustomerID = 1;
         */
         Connection connection = connect.startConnection();
-        PreparedStatement query = connection.prepareStatement("UPDATE " + column + " SET " + table + " WHERE " + where);
-        return query.executeQuery();
+        String statement = "UPDATE " + table + " SET " + set + " WHERE " + where;
+        System.out.println(statement);
+        PreparedStatement query = connection.prepareStatement(statement);
+        query.executeUpdate();
     }
 }

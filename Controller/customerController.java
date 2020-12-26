@@ -3,6 +3,7 @@ package Controller;
 import DAO.connect;
 import DAO.create;
 import DAO.read;
+import DAO.update;
 import Helpers.countryTableData;
 import Helpers.firstLevelDivisionTableData;
 import Helpers.switchStage;
@@ -164,23 +165,31 @@ Note: The address text field should not include first-level division and country
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
      * @throws IOException an exception
      */
-    public void saveButtonAction(ActionEvent actionEvent) throws IOException {
+    public void saveButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
         //capture values from gui
         String name = nameText.getText();
         String address = addressText.getText();
         String postalCode = postalCodeText.getText();
         String phone = phoneNumberText.getText();
-        String country = countryComboBox.getItems().toString();
-        String firstLevelDivision = firstLevelDivisionComboBox.getItems().toString();
+        String country = countryComboBox.getValue().toString();
+        String firstLevelDivision = String.valueOf(firstLevelDivisionComboBox.getValue());
+        System.out.println("firstLevelDivision is: " + firstLevelDivision);
+        String divisionID = firstLevelDivisionTableData.getFirstLevelDivisionID(firstLevelDivision);
+        System.out.println("divisionID is: " + divisionID);
 
-        //insert values into database
-        try {
-            create.createData("Customers",
-                    "name, address, postalCode, phone, country, firstLevelDivision",
-                    (name + ',' + address + ',' + postalCode + ',' + phone + ',' + country + ',' + firstLevelDivision));
-        } catch (SQLException e) {
-            e.printStackTrace();
+        //insert values into database if creating a new customer
+        if (customerModel.modifyCustomerButtonClicked == false) {
+            create.createData("customers",
+                    "Customer_Name, Address, Postal_Code, Phone, Division_ID",
+                    (name + ',' + address + ',' + postalCode + ',' + phone + ',' + divisionID));
+          //else update values in the database if editing a customer
+        } else {
+            //SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+            String set = "Customer_Name = '" + name + "', Address = '" + address + "', Postal_Code = '" + postalCode + "', Phone = '" + phone + "', Division_ID = 6" + divisionID;
+            String where = "Customer_ID = " + idText.getText();
+            update.updateData("customers",set, where);
         }
+
 
         //reset edit button flag
         customerModel.modifyCustomerButtonClicked = false;

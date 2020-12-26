@@ -1,14 +1,17 @@
 package Helpers;
 
+import DAO.connect;
 import DAO.read;
 import Model.firstLevelDivisionModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.DataOutput;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.DoubleAccumulator;
 
 /** This class generates firstLevelDivisionTableData */
 public class firstLevelDivisionTableData {
@@ -52,5 +55,20 @@ public class firstLevelDivisionTableData {
         }
 
         return data;
+    }
+
+    public static String getFirstLevelDivisionID(String name) throws SQLException {
+        String returnValue = null;
+        String column = "*";
+        String table = "first_level_divisions";
+        String where = "Division = '" + name + "'";
+        ResultSet results = read.readData(column, table, where);
+        if (results.next()) {
+            returnValue = results.getString("Division_ID");
+        }
+        try {
+            connect.closeConnection();
+        } catch (Exception e) {}
+        return returnValue;
     }
 }

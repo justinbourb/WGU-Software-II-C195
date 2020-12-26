@@ -17,13 +17,18 @@ public class create {
     * @exception SQLException, an SQL Exception
     * @return results, a ResultsSet of the data found
     */
-    public static ResultSet createData(String table, String columns, String values) throws SQLException {
+    public static void createData(String table, String columns, String values) throws SQLException {
         /* example usage:
         INSERT INTO Customers (CustomerName, City, Country)
         VALUES ('Cardinal', 'Stavanger', 'Norway');
         */
-        Connection connection = connect.startConnection();
-        PreparedStatement query = connection.prepareStatement("INSERT INTO " + table + " (" + columns + ")" + " VALUES " + values);
-        return query.executeQuery();
+        try(Connection connection = connect.startConnection()) {
+            String statement = "INSERT INTO " + table + " (" + columns + ")" + " VALUES (" + values + ")";
+            System.out.println(statement);
+            PreparedStatement query = connection.prepareStatement(statement);
+            query.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Creation was not successful.");
+        }
     }
 }
