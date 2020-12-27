@@ -177,7 +177,7 @@ public class mainController implements Initializable {
                 //foreign key constraint throws the following error
             } catch (SQLIntegrityConstraintViolationException e) {
                 //TODO: add this to an error message
-                System.out.println("Please delete all of the cutomer's appointments before deleting the customer");
+                System.out.println("Please delete all of the customer's appointments before deleting the customer");
             }
             switchStage.switchStage(actionEvent, resourceURL);
         }
