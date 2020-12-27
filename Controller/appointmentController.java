@@ -5,6 +5,7 @@ import Helpers.contactTableData;
 import Helpers.countryTableData;
 import Helpers.customerTableData;
 import Helpers.switchStage;
+import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -117,15 +118,21 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
     /**This function will fill the contactIDText field when a contact is selected.
      */
     @FXML
-    void contactComboBoxAction() {
+    void contactComboBoxAction() throws SQLException {
         //It should fill contactIDText with the contact id
+        String name = String.valueOf(contactComboBox.getValue());
+        String id = contactTableData.getContactID(name);
+        contactIDText.setText(id);
     }
 
     /**This function will fill the customerIDText field when a contact is selected.
      */
     @FXML
     void customerComboBoxAction() {
-        //It should fill the cusomterIDText with the customer id
+        //It should fill the customerIDText with the customer id
+        String name = String.valueOf(customerComboBox.getValue());
+        String id = customerTableData.getCustomerID(name);
+        customerIDText.setText(id);
     }
 
     private void prepopulateAppointmentData(Connection connection) {

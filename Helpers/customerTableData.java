@@ -77,4 +77,14 @@ public class customerTableData {
         }
         return customerNameArrayList;
     }
+
+    public static String getCustomerID(String name) {
+        try(ResultSet results = read.readData("Customer_ID", "customers","Customer_Name = '" + name + "'")) {
+            ;
+            if (results.next()) {
+                return results.getString("Customer_ID");
+            }
+        } catch (Exception e) {}
+        return null;
+    }
 }

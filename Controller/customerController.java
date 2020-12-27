@@ -149,7 +149,7 @@ public class customerController implements Initializable {
         if (customerModel.modifyCustomerButtonClicked == false) {
             create.createData("customers",
                     "Customer_Name, Address, Postal_Code, Phone, Division_ID",
-                    (name + ',' + address + ',' + postalCode + ',' + phone + ',' + divisionID));
+                    ("'"+ name + "', '" + address + "', '" + postalCode + "', '" + phone + "', '" + divisionID + "'"));
           //else update values in the database if editing a customer
         } else {
             //SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
