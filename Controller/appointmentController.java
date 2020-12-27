@@ -6,26 +6,26 @@ import DAO.read;
 import DAO.update;
 import Helpers.contactTableData;
 import Helpers.customerTableData;
-import Helpers.firstLevelDivisionTableData;
 import Helpers.switchStage;
 import Model.appointmentModel;
-import Model.customerModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import static Helpers.timeFunctions.*;
+
 
 public class appointmentController implements Initializable {
     @FXML
@@ -45,6 +45,24 @@ public class appointmentController implements Initializable {
 
     @FXML
     private Label locationLabel;
+
+    @FXML
+    private Spinner<Integer> startHourSpinner;
+
+    @FXML
+    private Spinner<Integer> startMinSpinner;
+
+    @FXML
+    private Spinner<Integer> endHourSpinner;
+
+    @FXML
+    private Spinner<Integer> endMinSpinner;
+
+    @FXML
+    private DatePicker startDatePicker;
+
+    @FXML
+    private DatePicker endDatePicker;
 
     @FXML
     private TextField appointmentIDText;
@@ -142,6 +160,17 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         customerIDText.setText(id);
     }
 
+    private void initSpinner(){
+        SpinnerValueFactory<Integer> startHoursFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 12);
+        SpinnerValueFactory<Integer> startMinutesFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59, 00);
+        SpinnerValueFactory<Integer> endHoursFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 12);
+        SpinnerValueFactory<Integer> endMinutesFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59, 00);
+        startHourSpinner.setValueFactory(startHoursFactory);
+        endHourSpinner.setValueFactory(endHoursFactory);
+        startMinSpinner.setValueFactory(startMinutesFactory);
+        endMinSpinner.setValueFactory(endMinutesFactory);
+    }
+
     /**This function pre-populates the appointment data.
      *
      * @param connection a database Connection
@@ -158,8 +187,16 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
                 titleText.setText(appointmentResults.getString("Title"));
                 locationText.setText(appointmentResults.getString("Location"));
                 typeText.setText(appointmentResults.getString("Type"));
-                startText.setText(appointmentResults.getString("Start"));
-                endText.setText(appointmentResults.getString("End"));
+//                startText.setText(appointmentResults.getString("Start"));
+                startMinSpinner.getValueFactory().setValue(Integer.valueOf(getMinutesFromDateTime(appointmentResults.getString("Start"))));
+                startHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(appointmentResults.getString("Start"))));
+                startDatePicker.getEditor().setText(getDateFromDateTime(appointmentResults.getString("Start")));
+                startDatePicker.setValue(LocalDate.parse(getDateFromDateTime(appointmentResults.getString("Start"))));
+                endMinSpinner.getValueFactory().setValue(Integer.valueOf(getMinutesFromDateTime(appointmentResults.getString("End"))));
+                endHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(appointmentResults.getString("End"))));
+                endDatePicker.getEditor().setText(getDateFromDateTime(appointmentResults.getString("End")));
+                endDatePicker.setValue(LocalDate.parse(getDateFromDateTime(appointmentResults.getString("End"))));
+//                endText.setText(appointmentResults.getString("End"));
                 descriptionTextArea.appendText(appointmentResults.getString("Description"));
                 //get the customer name from the database
                 ResultSet nameResults = read.readData("Customer_Name", "customers", "Customer_ID = " + appointmentResults.getString("Customer_ID"), connection);
@@ -179,7 +216,30 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
                 }
             }
         }
+    }
 
+    /** This function formats the date picker fields (start and end).
+     */
+    private void formatDate(){
+//        startMinSpinner.getValueFactory().setValue(45);
+//        startDatePicker.getEditor().setText("2020-07-25");
+//        startDatePicker.setValue(LocalDate.of(2020,07,25));
+        StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            @Override
+            public String toString(LocalDate localDate) {
+                return localDate != null ? dateTimeFormatter.format(localDate) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String s) {
+                return s != null && !s.isEmpty() ? LocalDate.parse(s, dateTimeFormatter) : null;
+            }
+        };
+        endDatePicker.setConverter(converter);
+        endDatePicker.setPromptText("yyyy-MM-dd");
+        startDatePicker.setConverter(converter);
+        startDatePicker.setPromptText("yyyy-MM-dd");
     }
 
     /**This function handles the save button
@@ -235,7 +295,11 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         try {
             connect.closeConnection();
         } catch (Exception e) {}
-        //It should fill countries combo box on load
+
+        //Initialize spinner values
+        initSpinner();
+        formatDate();
+        //It should fill combo boxes on load
         //It should use try with resources to close connection automatically
         try (var connection = connect.startConnection()) {
             ArrayList customerNames = customerTableData.getCustomerNames(connection);

@@ -1,8 +1,3 @@
-2020-12-15 21:40:40
-2020-12-15 21:40:47
-2020-12-15 21:41:56 test login failed.
-2020-12-15 21:42:01 admin login failed.
-2020-12-15 21:42:09 admin login successful.
 2020-12-15 21:43:38 user: admin login failed.
 2020-12-15 21:43:43 user: admin login failed.
 2020-12-15 21:43:52 user: admin login successful.
