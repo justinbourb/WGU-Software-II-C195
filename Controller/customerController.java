@@ -14,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
-import java.io.DataOutput;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -97,7 +96,7 @@ public class customerController implements Initializable {
         } catch (Exception e) {}
 
         //reset edit button flag
-        customerModel.modifyCustomerButtonClicked = false;
+        customerModel.editCustomerButtonClicked = false;
         String resourceURL = "/View/mainView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -146,7 +145,7 @@ public class customerController implements Initializable {
         String divisionID = firstLevelDivisionTableData.getFirstLevelDivisionID(firstLevelDivision);
 
         //insert values into database if creating a new customer
-        if (customerModel.modifyCustomerButtonClicked == false) {
+        if (customerModel.editCustomerButtonClicked == false) {
             create.createData("customers",
                     "Customer_Name, Address, Postal_Code, Phone, Division_ID",
                     ("'"+ name + "', '" + address + "', '" + postalCode + "', '" + phone + "', '" + divisionID + "'"));
@@ -160,7 +159,7 @@ public class customerController implements Initializable {
 
 
         //reset edit button flag
-        customerModel.modifyCustomerButtonClicked = false;
+        customerModel.editCustomerButtonClicked = false;
         String resourceURL = "/View/mainView.fxml";
         switchStage.switchStage(actionEvent, resourceURL);
     }
@@ -171,7 +170,7 @@ public class customerController implements Initializable {
      * @throws SQLException, an exception
      */
     private void prepopulateCustomerData(Connection connection) throws SQLException {
-        if (customerModel.modifyCustomerButtonClicked == true) {
+        if (customerModel.editCustomerButtonClicked == true) {
             int countryID;
             String divisionName = null;
             titleLabel.setText("Edit Customer");

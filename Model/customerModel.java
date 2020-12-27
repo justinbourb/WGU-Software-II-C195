@@ -11,11 +11,7 @@ public class customerModel {
     /**holds the selectedCustomerIndex*/
     public static String selectedCustomerIndex;
     /** was the modify button clicked? */
-    public static boolean modifyCustomerButtonClicked = false;
-    /** holds the selectedProductIndex */
-    public static String selectedAppointmentIndex;
-    /** was the modify button clicked? */
-    public static boolean modifyAppointmentButtonClicked = false;
+    public static boolean editCustomerButtonClicked = false;
 
     private String ID;
     private String name;

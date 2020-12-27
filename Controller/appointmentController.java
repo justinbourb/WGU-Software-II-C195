@@ -1,11 +1,12 @@
 package Controller;
 
 import DAO.connect;
+import DAO.read;
 import Helpers.contactTableData;
-import Helpers.countryTableData;
 import Helpers.customerTableData;
 import Helpers.switchStage;
-import com.mysql.cj.x.protobuf.MysqlxDatatypes;
+import Model.appointmentModel;
+import Model.customerModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,6 +19,7 @@ import javafx.scene.control.TextField;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -112,6 +114,8 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
     @FXML
     void cancelButtonAction(ActionEvent actionEvent) throws IOException {
         String resourceURL = "/View/mainView.fxml";
+        //reset was edit appointment clicked
+        appointmentModel.editAppointmentButtonClicked = false;
         switchStage.switchStage(actionEvent, resourceURL);
     }
 
@@ -135,7 +139,42 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         customerIDText.setText(id);
     }
 
-    private void prepopulateAppointmentData(Connection connection) {
+    /**This function pre-populates the appointment data.
+     *
+     * @param connection a database Connection
+     * @exception SQLException, an exception
+     */
+    private void prepopulateAppointmentData(Connection connection) throws SQLException {
+        //It should only fill data if the edit button was clicked
+        if (appointmentModel.editAppointmentButtonClicked) {
+            guiLabel.setText("Edit Appointment");
+            //pull the appointment data from the database
+            ResultSet appointmentResults = read.readData("*", "appointments", "Appointment_ID = " + appointmentModel.selectedAppointmentIndex, connection);
+            if (appointmentResults.next()){
+                titleText.setText(appointmentResults.getString("Title"));
+                locationText.setText(appointmentResults.getString("Location"));
+                typeText.setText(appointmentResults.getString("Type"));
+                startText.setText(appointmentResults.getString("Start"));
+                endText.setText(appointmentResults.getString("End"));
+                descriptionTextArea.appendText(appointmentResults.getString("Description"));
+                //get the customer name from the database
+                ResultSet nameResults = read.readData("Customer_Name", "customers", "Customer_ID = " + appointmentResults.getString("Customer_ID"), connection);
+                if (nameResults.next()){
+                    //set the selection of the combo box
+                    customerComboBox.getSelectionModel().select(customerComboBox.getItems().indexOf(nameResults.getString("Customer_Name")));
+                    //set customerIDText
+                    customerComboBoxAction();
+                }
+                //get the contact name from the database
+                ResultSet contactResults = read.readData("Contact_Name", "contacts", "Contact_ID = " + appointmentResults.getString("Contact_ID"), connection);
+                if (contactResults.next()){
+                    //set the selection of the combo box
+                    contactComboBox.getSelectionModel().select(contactComboBox.getItems().indexOf(contactResults.getString("Contact_Name")));
+                    //set contactIDText
+                    contactComboBoxAction();
+                }
+            }
+        }
 
     }
 
@@ -148,6 +187,8 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
     void saveButtonAction(ActionEvent actionEvent) throws IOException {
         //add save logic
         String resourceURL = "/View/mainView.fxml";
+        //reset was edit appointment clicked
+        appointmentModel.editAppointmentButtonClicked = false;
         switchStage.switchStage(actionEvent, resourceURL);
     }
 

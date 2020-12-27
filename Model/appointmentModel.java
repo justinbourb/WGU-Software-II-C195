@@ -2,7 +2,11 @@ package Model;
 
 /**This class stores the data from the database in a Java Object*/
 public class appointmentModel {
-    /** This is the constructor for the appointment Model*/
+    /** holds the selectedProductIndex */
+    public static String selectedAppointmentIndex;
+    /** was the modify button clicked? */
+    public static boolean editAppointmentButtonClicked = false;
+
 
     private String Appointment_ID;
     private String Customer_ID;

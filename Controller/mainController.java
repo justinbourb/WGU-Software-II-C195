@@ -3,7 +3,6 @@ package Controller;
 
 import DAO.connect;
 import DAO.delete;
-import DAO.read;
 import Helpers.appointmentTableData;
 import Helpers.confirmView;
 import Helpers.customerTableData;
@@ -16,7 +15,6 @@ import javafx.fxml.Initializable;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
@@ -204,7 +202,7 @@ public class mainController implements Initializable {
             customer = customerTable.getSelectionModel().getSelectedItem();
         }
         customerModel.selectedCustomerIndex = customer.getID();
-        customerModel.modifyCustomerButtonClicked = true;
+        customerModel.editCustomerButtonClicked = true;
         String resourceURL = "/View/customerView.fxml";
         try {
             connect.closeConnection();
@@ -224,8 +222,8 @@ public class mainController implements Initializable {
             appointmentTable.getSelectionModel().select(0);
             appointment = appointmentTable.getSelectionModel().getSelectedItem();
         }
-        customerModel.selectedAppointmentIndex = appointment.getAppointment_ID();
-        customerModel.modifyAppointmentButtonClicked = true;
+        appointmentModel.selectedAppointmentIndex = appointment.getAppointment_ID();
+        appointmentModel.editAppointmentButtonClicked = true;
         try {
             connect.closeConnection();
         } catch (Exception e){}
