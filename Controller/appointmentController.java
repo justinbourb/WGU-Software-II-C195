@@ -1,9 +1,12 @@
 package Controller;
 
 import DAO.connect;
+import DAO.create;
 import DAO.read;
+import DAO.update;
 import Helpers.contactTableData;
 import Helpers.customerTableData;
+import Helpers.firstLevelDivisionTableData;
 import Helpers.switchStage;
 import Model.appointmentModel;
 import Model.customerModel;
@@ -151,6 +154,7 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
             //pull the appointment data from the database
             ResultSet appointmentResults = read.readData("*", "appointments", "Appointment_ID = " + appointmentModel.selectedAppointmentIndex, connection);
             if (appointmentResults.next()){
+                appointmentIDText.setText(appointmentResults.getString("Appointment_ID"));
                 titleText.setText(appointmentResults.getString("Title"));
                 locationText.setText(appointmentResults.getString("Location"));
                 typeText.setText(appointmentResults.getString("Type"));
@@ -184,8 +188,35 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
      * @throws IOException, an Exception
      */
     @FXML
-    void saveButtonAction(ActionEvent actionEvent) throws IOException {
-        //add save logic
+    void saveButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
+        //capture values from gui
+        //title, location, type, start end, description, customer id, contact id, user id
+        //TODO: creating an appointment requires a datetime format for start and end fields
+        String title = titleText.getText();
+        String location = locationText.getText();
+        String type = typeText.getText();
+        String start = startText.getText();
+        String end = endText.getText();
+        String description = descriptionTextArea.getText();
+        String customerID = customerIDText.getText();
+        String contactID = contactIDText.getText();
+
+        //insert values into database if creating a new customer
+        if (appointmentModel.editAppointmentButtonClicked == false) {
+            String columns = "Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID";
+            String values = ("'"+ title + "', '" + description + "', '" + location + "', '" + type + "', '" + start + "', '"
+                    + end + "', '" + customerID + "', '" + "1" + "', '" + contactID + "'");
+                        create.createData("appointments",columns, values);
+            //else update values in the database if editing a customer
+        } else {
+            //SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+            String set = "Title = '" + title + "', Description = '" + description + "', Location = '" + location + "', Type = '" +
+                    type + "', Start = '" + start + "', End = '" + end + "', Customer_ID = '" + customerID + "', User_ID = '" + "1"
+                    + "', Contact_ID = '" + contactID + "'";
+            String where = "Appointment_ID = " + appointmentIDText.getText();
+            update.updateData("appointments",set, where);
+        }
+
         String resourceURL = "/View/mainView.fxml";
         //reset was edit appointment clicked
         appointmentModel.editAppointmentButtonClicked = false;

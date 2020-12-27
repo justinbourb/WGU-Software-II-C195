@@ -157,7 +157,6 @@ public class customerController implements Initializable {
             update.updateData("customers",set, where);
         }
 
-
         //reset edit button flag
         customerModel.editCustomerButtonClicked = false;
         String resourceURL = "/View/mainView.fxml";
