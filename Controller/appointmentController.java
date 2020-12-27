@@ -160,6 +160,7 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         customerIDText.setText(id);
     }
 
+    /** This function sets up the Spinners.*/
     private void initSpinner(){
         SpinnerValueFactory<Integer> startHoursFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 12);
         SpinnerValueFactory<Integer> startMinutesFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59, 00);
@@ -177,17 +178,18 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
      * @exception SQLException, an exception
      */
     private void prepopulateAppointmentData(Connection connection) throws SQLException {
+
         //It should only fill data if the edit button was clicked
         if (appointmentModel.editAppointmentButtonClicked) {
             guiLabel.setText("Edit Appointment");
             //pull the appointment data from the database
             ResultSet appointmentResults = read.readData("*", "appointments", "Appointment_ID = " + appointmentModel.selectedAppointmentIndex, connection);
+            //fill data to the gui
             if (appointmentResults.next()){
                 appointmentIDText.setText(appointmentResults.getString("Appointment_ID"));
                 titleText.setText(appointmentResults.getString("Title"));
                 locationText.setText(appointmentResults.getString("Location"));
                 typeText.setText(appointmentResults.getString("Type"));
-//                startText.setText(appointmentResults.getString("Start"));
                 startMinSpinner.getValueFactory().setValue(Integer.valueOf(getMinutesFromDateTime(appointmentResults.getString("Start"))));
                 startHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(appointmentResults.getString("Start"))));
                 startDatePicker.getEditor().setText(getDateFromDateTime(appointmentResults.getString("Start")));
@@ -196,7 +198,6 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
                 endHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(appointmentResults.getString("End"))));
                 endDatePicker.getEditor().setText(getDateFromDateTime(appointmentResults.getString("End")));
                 endDatePicker.setValue(LocalDate.parse(getDateFromDateTime(appointmentResults.getString("End"))));
-//                endText.setText(appointmentResults.getString("End"));
                 descriptionTextArea.appendText(appointmentResults.getString("Description"));
                 //get the customer name from the database
                 ResultSet nameResults = read.readData("Customer_Name", "customers", "Customer_ID = " + appointmentResults.getString("Customer_ID"), connection);
@@ -255,8 +256,31 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         String title = titleText.getText();
         String location = locationText.getText();
         String type = typeText.getText();
-        String start = startText.getText();
-        String end = endText.getText();
+        String startDate = startDatePicker.getEditor().getText();
+        String startMin = startMinSpinner.getEditor().getText();
+        String startHours = startHourSpinner.getEditor().getText();
+        //Min must be two digits for use with getDateTimeFromInput()
+        if(startMin.length() == 1){
+            startMin = "0" + startMin;
+        }
+        //Hours must be two digits for use with getDateTimeFromInput()
+        if(startHours.length() == 1){
+            startHours = "0" + startHours;
+        }
+        String startTime = startHours + ":" + startMin;
+        String endDate = endDatePicker.getEditor().getText();
+        String endMin = endMinSpinner.getEditor().getText();
+        if(endMin.length() == 1){
+            endMin = "0" + endMin;
+        }
+        String endHours = endHourSpinner.getEditor().getText();
+        if(endHours.length() == 1){
+            endHours = "0" + endHours;
+        }
+        String endTime = endHours + ":" + endMin;
+
+        String start = getDateTimeFromInput(startDate + " " + startTime);
+        String end = getDateTimeFromInput(endDate + " " + endTime);
         String description = descriptionTextArea.getText();
         String customerID = customerIDText.getText();
         String contactID = contactIDText.getText();
@@ -311,7 +335,6 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 }
 

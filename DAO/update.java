@@ -25,7 +25,6 @@ public class update {
         */
         try(Connection connection = connect.startConnection()) {
             String statement = "UPDATE " + table + " SET " + set + " WHERE " + where;
-            System.out.println(statement);
             PreparedStatement query = connection.prepareStatement(statement);
             query.executeUpdate();
         } catch (Exception e) {

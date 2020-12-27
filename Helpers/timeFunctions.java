@@ -37,6 +37,11 @@ public class timeFunctions {
         return localDateTime.format(dateFormatter);
     }
 
+    /** This function converts a DateTime string into a HH format.
+     *
+     * @param DateTime, A String with date and time.
+     * @return a String with HH format.
+     */
     public static String getHoursFromDateTime (String DateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter hourFormatter = DateTimeFormatter.ofPattern("HH");
@@ -44,10 +49,22 @@ public class timeFunctions {
         return localDateTime.format(hourFormatter);
     }
 
+    /** This function converts a DateTime string into a mm format.
+     *
+     * @param DateTime, A String with date and time.
+     * @return a String with mm format.
+     */
     public static String getMinutesFromDateTime (String DateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter minuteFormatter = DateTimeFormatter.ofPattern("mm");
         LocalDateTime localDateTime = LocalDateTime.parse(DateTime, formatter);
         return localDateTime.format(minuteFormatter);
+    }
+
+    public static String getDateTimeFromInput (String input){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(input, formatter);
+        return localDateTime.format(outputFormatter);
     }
 }
