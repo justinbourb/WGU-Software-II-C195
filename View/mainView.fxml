@@ -38,7 +38,7 @@
                   </TableView>
                   <Button fx:id="addCustomerButton" layoutX="726.0" layoutY="267.0" mnemonicParsing="false" onAction="#addCustomersButtonAction" prefHeight="25.0" prefWidth="54.0" text="Add" />
                   <Button fx:id="editCustomerButton" layoutX="790.0" layoutY="267.0" mnemonicParsing="false" onAction="#editCustomerButtonAction" prefHeight="25.0" prefWidth="54.0" text="Edit" />
-                  <Button fx:id="deleteCustomerButton" layoutX="855.0" layoutY="267.0" mnemonicParsing="false" onAction="#deleteCustomersButtonAction" text="Delete" />
+                  <Button fx:id="deleteCustomerButton" layoutX="855.0" layoutY="267.0" mnemonicParsing="false" onAction="#deleteCustomersButtonAction" prefWidth="54.0" text="Delete" />
                </children>
             </AnchorPane>
             <Label fx:id="mainLabel" alignment="CENTER" layoutY="29.0" prefHeight="20.0" prefWidth="940.0" text="Main Dashboard">
@@ -67,9 +67,9 @@
                         <TableColumn fx:id="appointmentEndTableColumn" prefWidth="115.0" text="End" />
                      </columns>
                   </TableView>
-                  <Button fx:id="appointmentAddButton" layoutX="734.0" layoutY="267.0" mnemonicParsing="false" onAction="#addAppointmentsButtonAction" text="Add" />
-                  <Button fx:id="appointmentEditButton" layoutX="786.0" layoutY="267.0" mnemonicParsing="false" onAction="#editAppointmentButtonAction" text="Edit" />
-                  <Button fx:id="appointmentDeleteButton" layoutX="853.0" layoutY="267.0" mnemonicParsing="false" onAction="#deleteAppointmentButtonAction" text="Delete" />
+                  <Button fx:id="appointmentAddButton" layoutX="726.0" layoutY="267.0" mnemonicParsing="false" onAction="#addAppointmentsButtonAction" prefWidth="54.0" text="Add" />
+                  <Button fx:id="appointmentEditButton" layoutX="789.0" layoutY="267.0" mnemonicParsing="false" onAction="#editAppointmentButtonAction" prefWidth="54.0" text="Edit" />
+                  <Button fx:id="appointmentDeleteButton" layoutX="853.0" layoutY="267.0" mnemonicParsing="false" onAction="#deleteAppointmentButtonAction" prefWidth="54.0" text="Delete" />
                   <RadioButton fx:id="fifteenDaysToggleButton" layoutX="354.0" layoutY="29.0" mnemonicParsing="false" onAction="#radioButtonHandler" selected="true" text="15 Days View">
                      <toggleGroup>
                         <ToggleGroup fx:id="appointmentViewToggle" />

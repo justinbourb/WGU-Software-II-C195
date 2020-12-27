@@ -61,6 +61,11 @@ public class timeFunctions {
         return localDateTime.format(minuteFormatter);
     }
 
+    /**This function converts a String input into a localDateTime format.
+     *
+     * @param input a String
+     * @return a localDateTime format.
+     */
     public static String getDateTimeFromInput (String input){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

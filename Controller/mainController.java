@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ResourceBundle;
 
 import Helpers.switchStage;
@@ -171,7 +172,13 @@ public class mainController implements Initializable {
         boolean wasOkPressed = confirmView.showAlert(confirmText);
         if (wasOkPressed){
             customerModel customer = customerTable.getSelectionModel().getSelectedItem();
-            delete.deleteData("customers", "Customer_ID = " + customer.getID());
+            try {
+                delete.deleteData("customers", "Customer_ID = " + customer.getID());
+                //foreign key constraint throws the following error
+            } catch (SQLIntegrityConstraintViolationException e) {
+                //TODO: add this to an error message
+                System.out.println("Please delete all of the cutomer's appointments before deleting the customer");
+            }
             switchStage.switchStage(actionEvent, resourceURL);
         }
     }
@@ -180,12 +187,14 @@ public class mainController implements Initializable {
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
      */
     @FXML
-    void deleteAppointmentButtonAction(ActionEvent actionEvent) throws SQLException {
+    void deleteAppointmentButtonAction(ActionEvent actionEvent) throws SQLException, IOException {
         String confirmText = "Pressing ok will delete this appointment.";
         String resourceURL = "/View/mainView.fxml";
         boolean wasOkPressed = confirmView.showAlert(confirmText);
         if (wasOkPressed){
-            //DELETE APPOINTMENT
+            appointmentModel appointment = appointmentTable.getSelectionModel().getSelectedItem();
+            delete.deleteData("appointments", "Appointment_ID = " + appointment.getAppointment_ID());
+            switchStage.switchStage(actionEvent, resourceURL);
         }
     }
 
