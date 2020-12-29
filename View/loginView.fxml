@@ -17,7 +17,7 @@
       <AnchorPane prefHeight="250.0" prefWidth="477.0">
          <children>
             <Label fx:id="locationLabel" alignment="CENTER" layoutX="-3.0" layoutY="6.0" prefHeight="17.0" prefWidth="477.0" />
-            <Label layoutX="172.0" layoutY="51.0" text="Please log in to continue." />
+            <Label fx:id="pleaseLogInLabel" layoutX="172.0" layoutY="51.0" text="Please log in to continue." />
             <TextField fx:id="usernameTextField" layoutX="104.0" layoutY="81.0" prefHeight="25.0" prefWidth="300.0" promptText="User Name" />
             <TextField fx:id="passwordTextField" layoutX="104.0" layoutY="117.0" prefWidth="300.0" promptText="Password" />
             <Button fx:id="submitButton" layoutX="350.0" layoutY="161.0" mnemonicParsing="false" onAction="#submitButtonAction" text="Submit" />

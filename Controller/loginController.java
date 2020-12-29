@@ -40,6 +40,9 @@ public class loginController  implements Initializable {
     
     private Boolean isFrench = false;
 
+    @FXML
+    private Label pleaseLogInLabel;
+
     /**
      * This function controls the submitButton button.  Text is displayed
      * in English or French based on the user's location.
@@ -98,14 +101,17 @@ public class loginController  implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Locale locale = Locale.getDefault();
         String language = locale.getDisplayLanguage();
+        System.out.println(language);
         locationLabel.setText("Your computer location is set to: " + locale);
-        if (language.equals("French")) {
+        if (language.equals("français")) {
             // translate code to French
             usernameTextField.setPromptText("Nom d'utilisateur"); 
             passwordTextField.setPromptText("mot de passe");
 
             welcomeLabel.setText("Bienvenue dans l'application de planification de bureau");
             submitButton.setText("soumettre");
+            pleaseLogInLabel.setText("Merci de vous connecter pour continuer.");
+            locationLabel.setText("L'emplacement de votre ordinateur est défini sur:" + locale);
             isFrench = true;
         }
     }

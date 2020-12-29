@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Locale;
+
 /** This class launches the application */
 public class mainLauncher extends Application {
 
@@ -15,9 +17,9 @@ public class mainLauncher extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception{
-        //Parent root = FXMLLoader.load(getClass().getResource("/View/loginView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/View/loginView.fxml"));
         //use mainView for testing only, bypasses login
-        Parent root = FXMLLoader.load(getClass().getResource("/View/mainView.fxml"));
+        //Parent root = FXMLLoader.load(getClass().getResource("/View/mainView.fxml"));
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
@@ -28,6 +30,8 @@ public class mainLauncher extends Application {
      * @exception ClassNotFoundException, an exception
      */
     public static void main(String[] args) throws ClassNotFoundException {
+        //Set Locale to France for testing purposes
+        //Locale.setDefault(Locale.FRANCE);
         launch(args);
     }
 }

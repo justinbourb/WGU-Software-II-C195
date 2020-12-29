@@ -20,15 +20,9 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ResourceBundle;
 
 import Helpers.switchStage;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 
 /* TODO
@@ -141,6 +135,9 @@ public class mainController implements Initializable {
 
     @FXML
     private Button logoutButton;
+
+    @FXML
+    private TextArea errorTextArea;
 
     /**This function controls the addCustomers button.
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
