@@ -134,6 +134,9 @@ public class mainController implements Initializable {
     private RadioButton thirtyDaysToggleButton;
 
     @FXML
+    private RadioButton threeHundredSixtyFiveDaysToggleButton;
+
+    @FXML
     private Button logoutButton;
 
     @FXML
@@ -171,12 +174,15 @@ public class mainController implements Initializable {
             customerModel customer = customerTable.getSelectionModel().getSelectedItem();
             try {
                 delete.deleteData("customers", "Customer_ID = " + customer.getID());
+                //remove error messages
+                errorTextArea.clear();
+                switchStage.switchStage(actionEvent, resourceURL);
                 //foreign key constraint throws the following error
-            } catch (SQLIntegrityConstraintViolationException e) {
+                 } catch (SQLIntegrityConstraintViolationException e) {
                 //TODO: add this to an error message
-                System.out.println("Please delete all of the customer's appointments before deleting the customer");
+                errorTextArea.appendText("Please delete all of the customer's appointments before deleting the customer.");
             }
-            switchStage.switchStage(actionEvent, resourceURL);
+
         }
     }
 
@@ -260,9 +266,12 @@ public class mainController implements Initializable {
     }
 
     /**This function controls the appointment radio buttons.
+     * Selecting a radio button will call initialize() which will
+     * repopulate the appointment and customer tables.
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
      */
     public void radioButtonHandler(ActionEvent actionEvent) {
+        initialize(null, null);
     }
 
     /**This function is automatically called by Java.  
@@ -276,10 +285,27 @@ public class mainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         try (var connection = connect.startConnection()){
+            ObservableList<appointmentModel> appointmentData;
+            Integer dateRange = 0;
+            if(fifteenDaysToggleButton.isSelected()){
+                dateRange = 15;
+            }
+            if (thirtyDaysToggleButton.isSelected()){
+                dateRange = 30;
+            }
+            if(threeHundredSixtyFiveDaysToggleButton.isSelected()){
+                dateRange = 365;
+            }
+
             ObservableList<customerModel> customerData = customerTableData.getCustomersData(connection);
             //customerModel.customerData = customerTableData.getCustomersData(connection);
-            ObservableList<appointmentModel> appointmentData = appointmentTableData.getAppointmentData(connection);
-
+            //if date range is set, query by date range
+            if(dateRange > 0) {
+                appointmentData = appointmentTableData.getAppointmentDataDateRange(connection, dateRange);
+            //else provide all results
+            } else {
+                appointmentData = appointmentTableData.getAppointmentData(connection);
+            }
             customerTable.setPlaceholder(new Label("The table is empty or no search results found."));
             customerTable.setEditable(true);
             customerTable.setItems(customerData);

@@ -29,7 +29,8 @@ public class read {
     public static ResultSet readData(String column, String table, String where, Connection connection) throws SQLException {
         PreparedStatement query = null;
         try {
-            query = connection.prepareStatement("SELECT " + column + " FROM " + table + " WHERE " + where);
+            String queryText = "SELECT " + column + " FROM " + table + " WHERE " + where;
+            query = connection.prepareStatement(queryText);
         }
         catch (Exception e) {}
         return query.executeQuery();
