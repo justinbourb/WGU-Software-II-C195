@@ -1,6 +1,9 @@
 package Controller;
 
+import DAO.connect;
 import Helpers.*;
+import Model.appointmentModel;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,12 +13,19 @@ import javafx.fxml.Initializable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static DAO.read.readData;
+import static Helpers.appointmentTableData.getAppointmentDataDateRange;
+import static Helpers.timeFunctions.getUTCTimeZone;
 
 /** This class controls the mainView.fxml */
 public class loginController  implements Initializable {
@@ -60,30 +70,33 @@ public class loginController  implements Initializable {
         String table = "users";
         String where = "User_Name = '" + name + "'";
         errorLabel.setText("");
-
-        ResultSet results = readData(column, table, where);
-        //Calling results.next() "consumes" the next result, so only use this method as needed
-        //How to peek at or check this value?
-        if(results.next()) {
-            String stored_password = results.getString("Password");
-            //if username and password match, log in
-            if (stored_password.equals(password)) {
-                String resourceURL = "/View/mainView.fxml";
-                loginAttempts.recordLoginAttempts("user: " + name + " login successful.");
-                switchStage.switchStage(actionEvent, resourceURL);
-            //print errors when password is wrong
+        
+        //try with resources will automatically close the database connection
+        try(ResultSet results = readData(column, table, where)) {
+            ;
+            //Calling results.next() "consumes" the next result, so only use this method as needed
+            //How to peek at or check this value?
+            if (results.next()) {
+                String stored_password = results.getString("Password");
+                //if username and password match, log in
+                if (stored_password.equals(password)) {
+                    String resourceURL = "/View/mainView.fxml";
+                    loginAttempts.recordLoginAttempts("user: " + name + " login successful.");
+                    switchStage.switchStage(actionEvent, resourceURL);
+                    //print errors when password is wrong
+                } else {
+                    loginAttempts.recordLoginAttempts("user: " + name + " login failed.");
+                    setErrors();
+                }
+                //print errors when no user found
             } else {
-                loginAttempts.recordLoginAttempts("user: " + name + " login failed.");
+                //don't record login attempt if no user name is present
+                if (name != null) {
+                    loginAttempts.recordLoginAttempts("user: " + name + " login failed.");
+                }
                 setErrors();
             }
-        //print errors when no user found
-        } else {
-            //don't record login attempt if no user name is present
-            if(name != null) {
-                loginAttempts.recordLoginAttempts("user: " + name + " login failed.");
-            }
-            setErrors();
-        }
+        } catch (Exception e) {}
     }
 
     /** This function shows the login errors to the gui in English or French */

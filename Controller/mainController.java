@@ -15,9 +15,13 @@ import javafx.fxml.Initializable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
 import Helpers.switchStage;
@@ -25,6 +29,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+
+import static Helpers.appointmentTableData.getAppointmentDataDateRange;
+import static Helpers.timeFunctions.getUTCTimeZone;
 
 /* TODO
 *1) access DB logic
@@ -163,6 +170,35 @@ public class mainController implements Initializable {
         switchStage.switchStage(actionEvent, resourceURL);
     }
 
+    /** This function will query the database for any appointments within 15 minutes of
+     * the users local time.  If appointments are found it will display to the GUI,
+     * else the GUI will display no upcoming appointments.
+     * @throws ParseException
+     */
+    private void checkFifteenMinutes() throws ParseException {
+        ObservableList<appointmentModel> appointments = null;
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nowPlusFifteen = now.plus(15, ChronoUnit.MINUTES);
+        DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedNowPlusFifteen = getUTCTimeZone(nowPlusFifteen.format(pattern));
+        String formattedNow =  getUTCTimeZone(now.format(pattern));
+        try (Connection connection = connect.startConnection()){
+            appointments = getAppointmentDataDateRange(formattedNow, formattedNowPlusFifteen, connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // If the user does not have any appointments within 15 minutes of logging in,
+        // display a custom message in the user interface indicating there are no upcoming appointments.
+        if (appointments.isEmpty()) {
+            errorTextArea.appendText("No upcoming appointments within 15 minutes.");
+            // A custom message should be displayed in the user interface and include the appointment ID, date, and time.
+        } else {
+            for (appointmentModel appointment : appointments) {
+                errorTextArea.appendText("Appointment ID: " + appointment.getAppointment_ID() + " Is starting at: " + appointment.getStart());
+            }
+        }
+    }
+
     /**This function controls the deleteCustomer button.
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
      */
@@ -286,6 +322,8 @@ public class mainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         try (var connection = connect.startConnection()){
+            //check for any appointments within 15 minutes
+            checkFifteenMinutes();
             ObservableList<appointmentModel> appointmentData;
             Integer dateRange = 0;
             if(fifteenDaysToggleButton.isSelected()){
