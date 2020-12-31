@@ -1,5 +1,17 @@
 # WGU-Software-II-C195
-This is a JavaFX GUI application for WGU Software II C195. The application models an appointment scheduling tool which uses a database and tracks user time zone and language setting.
+Title: WGU Software II C195 - Desktop Scheduling Application  
+Purpose:  
+This is a JavaFX GUI application for WGU Software II C195. The application models an appointment scheduling tool which uses a database and tracks user time zone and language setting.  Login screen text is displayed in English or French.  Timezones are stored in UTC and displayed in the user's computers timezone.  
+Available Reports:  
+Reports are available through search boxes which display custom data based on the query.  
+1. The total number of customer appointments by type and month.  
+2. A schedule for each contact in your organization that includes appointment ID, title, type and description, start date and time, end date and time, and customer ID.  
+3. A custom report filtered by location.  
+  
+Author: Justin Bourbonniere  
+Contact: jbourbo@wgu.edu  
+Version: 1.0  
+Date: 2020-12-31
 
 ## Requirements
 1. IntelliJ (download and install)
