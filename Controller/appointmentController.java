@@ -250,7 +250,7 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
      * @throws IOException, an Exception
      */
     @FXML
-    void saveButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
+    void saveButtonAction(ActionEvent actionEvent) throws IOException, SQLException, ParseException {
         //capture values from gui
         //title, location, type, start end, description, customer id, contact id, user id
         String title = titleText.getText();
@@ -279,8 +279,8 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         }
         String endTime = endHours + ":" + endMin;
 
-        String start = getDateTimeFromInput(startDate + " " + startTime);
-        String end = getDateTimeFromInput(endDate + " " + endTime);
+        String start = getUTCTimeZone(getDateTimeFromInput(startDate + " " + startTime));
+        String end = getUTCTimeZone(getDateTimeFromInput(endDate + " " + endTime));
         String description = descriptionTextArea.getText();
         String customerID = customerIDText.getText();
         String contactID = contactIDText.getText();

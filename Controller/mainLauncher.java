@@ -20,6 +20,9 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
+import static Helpers.timeFunctions.getDateTimeFromInput;
+import static Helpers.timeFunctions.getUTCTimeZone;
+
 /** This class launches the application */
 public class mainLauncher extends Application {
 
@@ -82,7 +85,7 @@ public class mainLauncher extends Application {
 //        System.out.println(TimeZone.getDefault());
 //        System.out.println(new Date());
 //        ZonedDateTime date = ZonedDateTime.of(2020,12,9,9,23,0,0, ZoneId.of("UTC"));
-        //testing("2020-12-30 10:00");
+        //getUTCTimeZone(getDateTimeFromInput("2020-12-30 10:00"));
         launch(args);
     }
 }

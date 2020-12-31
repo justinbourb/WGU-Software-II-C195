@@ -103,4 +103,20 @@ public class timeFunctions {
         //return time in local time zone
         return localTimeFormat;
     }
+
+    /** This function converts a local DateTime into UTC DateTime
+     *
+     * @param input, a local DateTime String
+     * @return a UTC DateTime String
+     * @throws ParseException
+     */
+    public static String getUTCTimeZone(String input) throws ParseException {
+        Date today = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(input);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        //format the time as UTC time
+        String UTCTimeFormat = df.format(today);
+        //return time in UTC time zone
+        return UTCTimeFormat;
+    }
 }
