@@ -149,8 +149,6 @@ public class mainController implements Initializable {
 
     //TODO: make table views editable
     //TODO: prevent scheduling overlapping appointments for customers
-    //TODO: searchable filter: a schedule for each contact in your organization that includes appointment ID, title, type and description, start date and time, end date and time, and customer ID
-    //TODO: searchable filter: an additional report
 
     /**This function controls the addCustomers button.
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
@@ -231,11 +229,12 @@ public class mainController implements Initializable {
      */
     @FXML
     void deleteAppointmentButtonAction(ActionEvent actionEvent) throws SQLException, IOException {
-        String confirmText = "Pressing ok will delete this appointment.";
+        appointmentModel appointment = appointmentTable.getSelectionModel().getSelectedItem();
+        String confirmText = "Pressing ok will delete this appointment.  Appointment ID: " + appointment.getAppointment_ID() + " Appointment Type: " + appointment.getType();
         String resourceURL = "/View/mainView.fxml";
         boolean wasOkPressed = confirmView.showAlert(confirmText);
         if (wasOkPressed){
-            appointmentModel appointment = appointmentTable.getSelectionModel().getSelectedItem();
+
             delete.deleteData("appointments", "Appointment_ID = " + appointment.getAppointment_ID());
             switchStage.switchStage(actionEvent, resourceURL);
         }

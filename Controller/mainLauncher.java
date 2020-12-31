@@ -1,28 +1,19 @@
 package Controller;
 
-import DAO.connect;
-import Helpers.timeFunctions;
-import com.mysql.cj.jdbc.admin.TimezoneDump;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.Locale;
-import java.util.Set;
 import java.util.TimeZone;
 
-import static Helpers.timeFunctions.*;
-import static Helpers.timeFunctions.getLocalTimeZone;
 
 /** This class launches the application */
 public class mainLauncher extends Application {

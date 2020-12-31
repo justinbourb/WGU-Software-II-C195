@@ -8,13 +8,13 @@ import Helpers.contactTableData;
 import Helpers.customerTableData;
 import Helpers.switchStage;
 import Model.appointmentModel;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 
-import javax.xml.stream.events.StartDocument;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -22,10 +22,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import static Helpers.appointmentTableData.getAppointmentDataDateRange;
 import static Helpers.timeFunctions.*;
 
 
@@ -120,15 +123,6 @@ public class appointmentController implements Initializable {
     @FXML
     private TextField contactIDText;
 
-/* Requirements
-a.  Write code that enables the user to add, update, and delete appointments. The code should also include the following functionalities:
-
-•  A custom message is displayed in the user interface with the Appointment_ID and type of appointment canceled.
-
-•  All of the original appointment information is displayed on the update form in local time zone.
-
-*/
-
     /** This function handles the cancel button
      *
      * @param actionEvent, an ActionEvent
@@ -140,6 +134,29 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         //reset was edit appointment clicked
         appointmentModel.editAppointmentButtonClicked = false;
         switchStage.switchStage(actionEvent, resourceURL);
+    }
+
+    private boolean checkOverlappingAppointments(String start, String end) throws ParseException {
+        //reset error text to prevent duplicate messages
+        errorTextArea.clear();
+        ObservableList<appointmentModel> appointments = null;
+
+        try (Connection connection = connect.startConnection()){
+            appointments = getAppointmentDataDateRange(start, end, connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // If the user does not have any appointments within 15 minutes of logging in,
+        // display a custom message in the user interface indicating there are no upcoming appointments.
+        if (appointments.isEmpty()) {
+            return true;
+            // A custom message should be displayed in the user interface and include the appointment ID, date, and time.
+        } else {
+            for (appointmentModel appointment : appointments) {
+                errorTextArea.appendText("An overlapping appointment Appointment ID: " + appointment.getAppointment_ID() + " Is starting at: " + appointment.getStart());
+            }
+            return false;
+        }
     }
 
     /**This function will fill the contactIDText field when a contact is selected.
@@ -294,26 +311,30 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         String customerID = customerIDText.getText();
         String contactID = contactIDText.getText();
 
-        //insert values into database if creating a new customer
-        if (appointmentModel.editAppointmentButtonClicked == false) {
-            String columns = "Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID";
-            String values = ("'"+ title + "', '" + description + "', '" + location + "', '" + type + "', '" + start + "', '"
-                    + end + "', '" + customerID + "', '" + "1" + "', '" + contactID + "'");
-                        create.createData("appointments",columns, values);
-            //else update values in the database if editing a customer
-        } else {
-            //SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
-            String set = "Title = '" + title + "', Description = '" + description + "', Location = '" + location + "', Type = '" +
-                    type + "', Start = '" + start + "', End = '" + end + "', Customer_ID = '" + customerID + "', User_ID = '" + "1"
-                    + "', Contact_ID = '" + contactID + "'";
-            String where = "Appointment_ID = " + appointmentIDText.getText();
-            update.updateData("appointments",set, where);
-        }
+        //check for overlapping appointments and prevent saving if so
+        boolean anyOverlappingAppointments = checkOverlappingAppointments(start,end);
+        if(!anyOverlappingAppointments) {
+            //insert values into database if creating a new customer
+            if (appointmentModel.editAppointmentButtonClicked == false) {
+                String columns = "Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID";
+                String values = ("'" + title + "', '" + description + "', '" + location + "', '" + type + "', '" + start + "', '"
+                        + end + "', '" + customerID + "', '" + "1" + "', '" + contactID + "'");
+                create.createData("appointments", columns, values);
+                //else update values in the database if editing a customer
+            } else {
+                //SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+                String set = "Title = '" + title + "', Description = '" + description + "', Location = '" + location + "', Type = '" +
+                        type + "', Start = '" + start + "', End = '" + end + "', Customer_ID = '" + customerID + "', User_ID = '" + "1"
+                        + "', Contact_ID = '" + contactID + "'";
+                String where = "Appointment_ID = " + appointmentIDText.getText();
+                update.updateData("appointments", set, where);
+            }
 
-        String resourceURL = "/View/mainView.fxml";
-        //reset was edit appointment clicked
-        appointmentModel.editAppointmentButtonClicked = false;
-        switchStage.switchStage(actionEvent, resourceURL);
+            String resourceURL = "/View/mainView.fxml";
+            //reset was edit appointment clicked
+            appointmentModel.editAppointmentButtonClicked = false;
+            switchStage.switchStage(actionEvent, resourceURL);
+        }
     }
 
     /**This function is automatically called by Java.

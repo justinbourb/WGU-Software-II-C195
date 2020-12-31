@@ -73,17 +73,6 @@ public class customerController implements Initializable {
     @FXML
     private ComboBox<firstLevelDivisionModel> firstLevelDivisionComboBox;
 
-/* Requirements
-    •  Customer records and appointments can be added, updated, and deleted.
-
--  When deleting a customer record, all of the customer’s appointments must be deleted first, due to foreign key constraints.
-
-•  Customer data is displayed using a TableView, including first-level division data. A list of all the customers and their information may be viewed in a TableView, and updates of the data can be performed in text fields on the form.
-
-•  When a customer record is deleted, a custom message should display in the user interface.
-     */
-
-
     /**
      * This function controls the cancel button.
      *
