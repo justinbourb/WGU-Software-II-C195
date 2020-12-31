@@ -19,6 +19,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -177,7 +178,7 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
      * @param connection a database Connection
      * @exception SQLException, an exception
      */
-    private void prepopulateAppointmentData(Connection connection) throws SQLException {
+    private void prepopulateAppointmentData(Connection connection) throws SQLException, ParseException {
 
         //It should only fill data if the edit button was clicked
         if (appointmentModel.editAppointmentButtonClicked) {
@@ -190,14 +191,14 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
                 titleText.setText(appointmentResults.getString("Title"));
                 locationText.setText(appointmentResults.getString("Location"));
                 typeText.setText(appointmentResults.getString("Type"));
-                startMinSpinner.getValueFactory().setValue(Integer.valueOf(getMinutesFromDateTime(appointmentResults.getString("Start"))));
-                startHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(appointmentResults.getString("Start"))));
-                startDatePicker.getEditor().setText(getDateFromDateTime(appointmentResults.getString("Start")));
-                startDatePicker.setValue(LocalDate.parse(getDateFromDateTime(appointmentResults.getString("Start"))));
-                endMinSpinner.getValueFactory().setValue(Integer.valueOf(getMinutesFromDateTime(appointmentResults.getString("End"))));
-                endHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(appointmentResults.getString("End"))));
-                endDatePicker.getEditor().setText(getDateFromDateTime(appointmentResults.getString("End")));
-                endDatePicker.setValue(LocalDate.parse(getDateFromDateTime(appointmentResults.getString("End"))));
+                startMinSpinner.getValueFactory().setValue(Integer.valueOf(getMinutesFromDateTime(getLocalTimeZone(appointmentResults.getString("Start")))));
+                startHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(getLocalTimeZone(appointmentResults.getString("Start")))));
+                startDatePicker.getEditor().setText(getDateFromDateTime(getLocalTimeZone(appointmentResults.getString("Start"))));
+                startDatePicker.setValue(LocalDate.parse(getDateFromDateTime(getLocalTimeZone(appointmentResults.getString("Start")))));
+                endMinSpinner.getValueFactory().setValue(Integer.valueOf(getMinutesFromDateTime(getLocalTimeZone(appointmentResults.getString("End")))));
+                endHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(getLocalTimeZone(appointmentResults.getString("End")))));
+                endDatePicker.getEditor().setText(getDateFromDateTime(getLocalTimeZone(appointmentResults.getString("End"))));
+                endDatePicker.setValue(LocalDate.parse(getDateFromDateTime(getLocalTimeZone(appointmentResults.getString("End")))));
                 descriptionTextArea.appendText(appointmentResults.getString("Description"));
                 //get the customer name from the database
                 ResultSet nameResults = read.readData("Customer_Name", "customers", "Customer_ID = " + appointmentResults.getString("Customer_ID"), connection);
@@ -252,7 +253,6 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
     void saveButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
         //capture values from gui
         //title, location, type, start end, description, customer id, contact id, user id
-        //TODO: creating an appointment requires a datetime format for start and end fields
         String title = titleText.getText();
         String location = locationText.getText();
         String type = typeText.getText();
@@ -332,7 +332,7 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
             contactComboBox.getItems().addAll(contactNames);
             //It should populate customer information if the edit button was clicked
             prepopulateAppointmentData(connection);
-        } catch (SQLException e) {
+        } catch (SQLException | ParseException e) {
             e.printStackTrace();
         }
     }

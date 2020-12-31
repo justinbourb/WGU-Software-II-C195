@@ -9,8 +9,10 @@ import javafx.collections.ObservableList;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
 
+import static Helpers.timeFunctions.getLocalTimeZone;
 import static Helpers.timeFunctions.localDateNow;
 
 /** This class generates appointmentTableData */
@@ -67,7 +69,7 @@ public class appointmentTableData {
         }
         return appointmentTableData;
     }
-    public static ObservableList<appointmentModel> getAppointmentDataDateRange(Connection connection, Integer dateRange) throws SQLException {
+    public static ObservableList<appointmentModel> getAppointmentDataDateRange(Connection connection, Integer dateRange) throws SQLException, ParseException {
         ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();
         String column = "*";
         String table = "appointments";
@@ -86,8 +88,11 @@ public class appointmentTableData {
             String Contact_ID = results.getString("Contact_ID");
             String Type = results.getString("Type");
             String Start = results.getString("Start");
+            //convert time to local time zone
+            Start = getLocalTimeZone(Start);
             String End = results.getString("End");
-
+            //convert time to local time zone
+            End = getLocalTimeZone(End);
             appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, Start, End);
             appointmentTableData.add(appointment);
         }

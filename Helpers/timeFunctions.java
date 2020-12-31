@@ -1,9 +1,14 @@
 package Helpers;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**This class contains functions related to time.*/
 public class timeFunctions {
@@ -71,5 +76,31 @@ public class timeFunctions {
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime localDateTime = LocalDateTime.parse(input, formatter);
         return localDateTime.format(outputFormatter);
+    }
+
+    /**This function accepts a DateTime string from the database.  Per the instructions
+     * information in the database is assumed to be from the "UTC" timezone.  Thus this
+     * function first stores the default time zone as set on the local computer,
+     * then it sets the default to UTC before accessing the data from the database.
+     * Then it converts the database time into local time and restores the default time
+     * zone to it's previous setting.
+     * @param input, a DateTime string from the database
+     * @return the DateTime converted to local time
+     * @throws ParseException
+     */
+    public static String getLocalTimeZone(String input) throws ParseException {
+        //store original timezone settings
+        String defaultZone = TimeZone.getDefault().getID();
+        //set UTC as default, all database time is in UTC
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        Date today = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(input);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone(defaultZone));
+        //format the time as local time
+        String localTimeFormat = df.format(today);
+        //restore default timezone settings
+        TimeZone.setDefault(TimeZone.getTimeZone(defaultZone));
+        //return time in local time zone
+        return localTimeFormat;
     }
 }
