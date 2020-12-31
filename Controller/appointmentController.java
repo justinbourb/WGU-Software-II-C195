@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 
+import javax.xml.stream.events.StartDocument;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -161,11 +162,19 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         customerIDText.setText(id);
     }
 
-    /** This function sets up the Spinners.*/
-    private void initSpinner(){
-        SpinnerValueFactory<Integer> startHoursFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 12);
+    /** This function sets up the Spinners. It should provide
+     * a time range from 8am to 10pm EST.  It should
+     * convert the time range for the user's default time zone.*/
+    private void initSpinner() throws ParseException {
+        //convert start time: 8am EST to local time zone
+        Integer startHours = Integer.parseInt(getHoursFromDateTime(getLocalTimeZone("2020-12-31 13:00:00")));
+        //convert end time: 9pm EST to local time zone (appointments up to 9:59pm, closing at 10pm)
+        Integer endHours = Integer.parseInt(getHoursFromDateTime(getLocalTimeZone("2020-12-31 02:00:00")));
+
+
+        SpinnerValueFactory<Integer> startHoursFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(startHours, endHours, startHours);
         SpinnerValueFactory<Integer> startMinutesFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59, 00);
-        SpinnerValueFactory<Integer> endHoursFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 12);
+        SpinnerValueFactory<Integer> endHoursFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(startHours, endHours, startHours);
         SpinnerValueFactory<Integer> endMinutesFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59, 00);
         startHourSpinner.setValueFactory(startHoursFactory);
         endHourSpinner.setValueFactory(endHoursFactory);
@@ -321,7 +330,11 @@ a.  Write code that enables the user to add, update, and delete appointments. Th
         } catch (Exception e) {}
 
         //Initialize spinner values
-        initSpinner();
+        try {
+            initSpinner();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         formatDate();
         //It should fill combo boxes on load
         //It should use try with resources to close connection automatically
