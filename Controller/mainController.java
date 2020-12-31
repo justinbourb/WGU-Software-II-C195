@@ -31,14 +31,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 import static Helpers.appointmentTableData.getAppointmentDataDateRange;
+import static Helpers.timeFunctions.getMonthFromDateTime;
 import static Helpers.timeFunctions.getUTCTimeZone;
-
-/* TODO
-*1) access DB logic
-*2) Create customers tableview
-*3) etc?
-*/
-
 
 /** This class controls the mainView.fxml */
 public class mainController implements Initializable {
@@ -91,7 +85,10 @@ public class mainController implements Initializable {
     private Label appointmentsLabel;
 
     @FXML
-    private TextField appointmentsSearchText;
+    private TextField appointmentsSearchTypeOrMonthText;
+
+    @FXML
+    private TextField appointmentsSearchContactOrLocationText;
 
     @FXML
     private TableView<appointmentModel> appointmentTable;
@@ -150,6 +147,11 @@ public class mainController implements Initializable {
     @FXML
     private TextArea errorTextArea;
 
+    //TODO: make table views editable
+    //TODO: prevent scheduling overlapping appointments for customers
+    //TODO: searchable filter: a schedule for each contact in your organization that includes appointment ID, title, type and description, start date and time, end date and time, and customer ID
+    //TODO: searchable filter: an additional report
+
     /**This function controls the addCustomers button.
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
      * @throws IOException an exception
@@ -176,6 +178,8 @@ public class mainController implements Initializable {
      * @throws ParseException
      */
     private void checkFifteenMinutes() throws ParseException {
+        //reset error text to prevent duplicate messages
+        errorTextArea.clear();
         ObservableList<appointmentModel> appointments = null;
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nowPlusFifteen = now.plus(15, ChronoUnit.MINUTES);
@@ -216,7 +220,6 @@ public class mainController implements Initializable {
                 switchStage.switchStage(actionEvent, resourceURL);
                 //foreign key constraint throws the following error
                  } catch (SQLIntegrityConstraintViolationException e) {
-                //TODO: add this to an error message
                 errorTextArea.appendText("Please delete all of the customer's appointments before deleting the customer.");
             }
 
@@ -290,16 +293,105 @@ public class mainController implements Initializable {
         switchStage.switchStage(actionEvent, resourceURL);
     }
 
-    /**This function controls the customerSearch Text button.
+    /**This function controls the customerSearch Text.
      * @param keyEvent, a JavaFX keyEvent provided by a key click
      */
-    public void onKeyReleasedCustomerSearchText(KeyEvent keyEvent) {
+    @FXML
+    private void onKeyReleasedCustomerSearchText(KeyEvent keyEvent) {
     }
 
-    /**This function controls the customerSearch Text button.
+    /**This function controls the appointment type or month search.
      * @param keyEvent, a JavaFX keyEvent provided by a key click
      */
-    public void onKeyReleasedAppointmentSearchText(KeyEvent keyEvent) {
+    @FXML
+    private void onKeyReleasedAppointmentSearchTypeOrMonthText(KeyEvent keyEvent) {
+        searchAppointmentTypeOrMonth(appointmentsSearchTypeOrMonthText.getText());
+        if(!(appointmentModel.getFilteredAppointments().isEmpty())) {
+            appointmentTable.setItems(appointmentModel.getFilteredAppointments());
+        }
+    }
+
+    /**This function controls the appointment contact or location search.
+     * @param keyEvent, a JavaFX keyEvent provided by a key click
+     */
+    @FXML
+    private void onKeyReleasedAppointmentSearchContactOrLocationText(KeyEvent keyEvent){
+        searchAppointmentContactOrLocation(appointmentsSearchContactOrLocationText.getText());
+        if(!(appointmentModel.getFilteredAppointments().isEmpty())) {
+            appointmentTable.setItems(appointmentModel.getFilteredAppointments());
+        }
+    }
+
+    private void searchAppointmentTypeOrMonth(String searchInput) {
+        try (var connection = connect.startConnection()) {
+            ObservableList<appointmentModel> appointmentData;
+            appointmentData = appointmentTableData.getAppointmentData(connection);
+            boolean itsInt;
+            int intSearch = -1;
+            String stringSearch = null;
+            //check if filtered list contains data
+            if (!(appointmentModel.getFilteredAppointments().isEmpty())){
+                appointmentModel.getFilteredAppointments().clear();
+            }
+            //check if the search input is an int or a string
+            try {
+                intSearch = Integer.parseInt(searchInput, 10);
+                itsInt = true;
+            } catch (Exception e){
+                stringSearch = searchInput;
+                itsInt = false;
+            }
+            //if int, search against start month
+            for (appointmentModel appointment : appointmentData){
+                if (itsInt){
+                    Integer month = Integer.parseInt(getMonthFromDateTime(appointment.getStart()));
+                    if(month == intSearch){
+                        appointmentModel.getFilteredAppointments().add(appointment);
+                    }
+                    //search against appointment type
+                } else {
+                    if(appointment.getType().contains(stringSearch)){
+                        appointmentModel.getFilteredAppointments().add(appointment);
+                    }
+                }
+            }
+        } catch (Exception e) {}
+    }
+
+    private void searchAppointmentContactOrLocation(String searchInput) {
+        try (var connection = connect.startConnection()) {
+            ObservableList<appointmentModel> appointmentData;
+            appointmentData = appointmentTableData.getAppointmentData(connection);
+            boolean itsInt;
+            int intSearch = -1;
+            String stringSearch = null;
+            //check if filtered list contains data
+            if (!(appointmentModel.getFilteredAppointments().isEmpty())){
+                appointmentModel.getFilteredAppointments().clear();
+            }
+            //check if the search input is an int or a string
+            try {
+                intSearch = Integer.parseInt(searchInput, 10);
+                itsInt = true;
+            } catch (Exception e){
+                stringSearch = searchInput;
+                itsInt = false;
+            }
+            //if int, search against start month
+            for (appointmentModel appointment : appointmentData){
+                if (itsInt){
+                    Integer contactID = Integer.parseInt(appointment.getContact_ID());
+                    if(contactID == intSearch){
+                        appointmentModel.getFilteredAppointments().add(appointment);
+                    }
+                    //search against appointment type
+                } else {
+                    if(appointment.getLocation().contains(stringSearch)){
+                        appointmentModel.getFilteredAppointments().add(appointment);
+                    }
+                }
+            }
+        } catch (Exception e) {}
     }
 
     /**This function controls the appointment radio buttons.

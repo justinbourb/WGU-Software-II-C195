@@ -1,5 +1,8 @@
 package Model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**This class stores the data from the database in a Java Object*/
 public class appointmentModel {
     /** holds the selectedProductIndex */
@@ -22,6 +25,7 @@ public class appointmentModel {
     private String Last_Update;
     private String Last_Updated_By;
     private String User_ID;
+    private static ObservableList<appointmentModel> filteredAppointments = FXCollections.observableArrayList();;
 
     /** This is the constructor for the appointment Model*/
     public appointmentModel(String appointment_ID, String customer_ID, String title, String description, String location, String contact_ID, String type, String start, String end) {
@@ -34,6 +38,10 @@ public class appointmentModel {
         this.Type = type;
         this.Start = start;
         this.End = end;
+    }
+
+    public static ObservableList<appointmentModel> getFilteredAppointments() {
+        return filteredAppointments;
     }
 
     public String getAppointment_ID() {
