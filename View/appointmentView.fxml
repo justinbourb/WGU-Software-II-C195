@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="396.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.appointmentController">
+<VBox prefHeight="460.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.appointmentController">
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
@@ -51,7 +51,6 @@
             <TextArea fx:id="descriptionTextArea" layoutX="396.0" layoutY="107.0" prefHeight="200.0" prefWidth="200.0" />
             <Button fx:id="saveButton" layoutX="442.0" layoutY="335.0" onAction="#saveButtonAction" text="Save" />
             <Button fx:id="cancelButton" layoutX="505.0" layoutY="335.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
-            <TextArea fx:id="errorTextArea" layoutX="310.0" layoutY="82.0" prefHeight="142.0" prefWidth="323.0" visible="false" />
             <Label fx:id="typeLabel" alignment="CENTER" layoutX="27.0" layoutY="232.0" prefHeight="17.0" prefWidth="86.0" text="Type" />
             <Label fx:id="endLabel" alignment="CENTER" layoutX="27.0" layoutY="319.0" prefHeight="17.0" prefWidth="86.0" text="End" />
             <Label fx:id="startLabel" alignment="CENTER" layoutX="27.0" layoutY="273.0" prefHeight="17.0" prefWidth="86.0" text="Start" />
@@ -64,5 +63,6 @@
             <Label layoutX="340.0" layoutY="298.0" text="min" />
       </children>
     </AnchorPane>
+      <TextArea fx:id="errorTextArea" prefHeight="64.0" prefWidth="640.0" visible="false" />
   </children>
 </VBox>

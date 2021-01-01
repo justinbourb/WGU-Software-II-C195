@@ -136,6 +136,14 @@ public class appointmentController implements Initializable {
         switchStage.switchStage(actionEvent, resourceURL);
     }
 
+    /**This function checks for any overlapping appointments in the database.  It searches
+     * if the requested start time is between any existing start and finish times.  Returns true if
+     * no overlapping appointments or false if an overlap is detected.
+     * @param start appointment start DateTime
+     * @param end appointment end DateTime
+     * @return Returns true if no overlapping appointments or false if an overlap is detected.
+     * @throws ParseException
+     */
     private boolean checkOverlappingAppointments(String start, String end) throws ParseException {
         //reset error text to prevent duplicate messages
         errorTextArea.clear();
@@ -146,14 +154,16 @@ public class appointmentController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        // If the user does not have any appointments within 15 minutes of logging in,
-        // display a custom message in the user interface indicating there are no upcoming appointments.
+        // If the user does not have any overlapping appointments return true,
         if (appointments.isEmpty()) {
             return true;
             // A custom message should be displayed in the user interface and include the appointment ID, date, and time.
+            //If there are overlapping appointments return false
         } else {
             for (appointmentModel appointment : appointments) {
-                errorTextArea.appendText("An overlapping appointment Appointment ID: " + appointment.getAppointment_ID() + " Is starting at: " + appointment.getStart());
+                errorTextArea.setVisible(true);
+                errorTextArea.appendText("Appointment ID: " + appointment.getAppointment_ID() + " Starting: " + appointment.getStart() +
+                        " Ending: " + appointment.getEnd() + " is overlapping." +  System.lineSeparator() + "Please choose a time that does not conflict.");
             }
             return false;
         }
@@ -313,7 +323,7 @@ public class appointmentController implements Initializable {
 
         //check for overlapping appointments and prevent saving if so
         boolean anyOverlappingAppointments = checkOverlappingAppointments(start,end);
-        if(!anyOverlappingAppointments) {
+        if(anyOverlappingAppointments) {
             //insert values into database if creating a new customer
             if (appointmentModel.editAppointmentButtonClicked == false) {
                 String columns = "Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID";
@@ -346,6 +356,7 @@ public class appointmentController implements Initializable {
         //It should prefill customer ID and contact ID
         //It should use try with resources to automatically close the database connection
         //It should prefill appoint data if editing
+
         try {
             connect.closeConnection();
         } catch (Exception e) {}
