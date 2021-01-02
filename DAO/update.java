@@ -29,6 +29,7 @@ public class update {
             query.executeUpdate();
         } catch (Exception e) {
             System.out.println("Update not successful.");
+            e.printStackTrace();
         }
     }
 }

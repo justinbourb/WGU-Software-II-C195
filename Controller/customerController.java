@@ -141,7 +141,7 @@ public class customerController implements Initializable {
           //else update values in the database if editing a customer
         } else {
             //SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
-            String set = "Customer_Name = '" + name + "', Address = '" + address + "', Postal_Code = '" + postalCode + "', Phone = '" + phone + "', Division_ID = 6" + divisionID;
+            String set = "Customer_Name = '" + name + "', Address = '" + address + "', Postal_Code = '" + postalCode + "', Phone = '" + phone + "', Division_ID = " + divisionID;
             String where = "Customer_ID = " + idText.getText();
             update.updateData("customers",set, where);
         }

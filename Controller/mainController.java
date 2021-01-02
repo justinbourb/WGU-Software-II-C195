@@ -3,6 +3,7 @@ package Controller;
 
 import DAO.connect;
 import DAO.delete;
+import DAO.update;
 import Helpers.appointmentTableData;
 import Helpers.confirmView;
 import Helpers.customerTableData;
@@ -10,6 +11,7 @@ import Model.appointmentModel;
 import Model.customerModel;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
@@ -27,12 +29,14 @@ import java.util.ResourceBundle;
 import Helpers.switchStage;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 import static Helpers.appointmentTableData.getAppointmentDataDateRange;
 import static Helpers.timeFunctions.getMonthFromDateTime;
 import static Helpers.timeFunctions.getUTCTimeZone;
+import static javafx.scene.control.cell.TextFieldTableCell.forTableColumn;
 
 /** This class controls the mainView.fxml */
 public class mainController implements Initializable {
@@ -56,6 +60,7 @@ public class mainController implements Initializable {
 
     @FXML
     private TableColumn<customerModel, String> customerNameTableColumn;
+
 
     @FXML
     private TableColumn<customerModel, String> customerAddressTableColumn;
@@ -148,7 +153,6 @@ public class mainController implements Initializable {
     private TextArea errorTextArea;
 
     //TODO: make table views editable
-    //TODO: prevent scheduling overlapping appointments for customers
 
     /**This function controls the addCustomers button.
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
@@ -439,8 +443,69 @@ public class mainController implements Initializable {
             customerTable.setPlaceholder(new Label("The table is empty or no search results found."));
             customerTable.setEditable(true);
             customerTable.setItems(customerData);
-            customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("ID"));
+
+            //setCellValueFactory prefills tableColumn with data from the database
             customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("name"));
+            //setCellFactory allows editing
+            customerNameTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            //setOnEditCommit is what happens after the edit takes place
+            customerNameTableColumn.setOnEditCommit(editEvent());
+
+
+            /*
+            customerNameTableColumn.setOnEditCommit(
+                    new EventHandler<TableColumn.CellEditEvent<customerModel, String>>() {
+                        @Override
+                        public void handle(TableColumn.CellEditEvent<customerModel, String> cellEditEvent) {
+                            String setColumn = String.valueOf(cellEditEvent.getTableColumn().getText());
+                            String set = cellEditEvent.getNewValue();
+                            String where = cellEditEvent.getRowValue().getID();
+                            String whereColumn = cellEditEvent.getTableView().getColumns().get(0).getText();
+
+                            set = setColumn + " = '" + set +"'";
+
+                            if(whereColumn.equals("Customer_ID")){
+                                where = whereColumn + " = " + where;
+                            } else {
+                                where = "Appointment_ID = " + where;
+                            }
+
+//                            try {
+//                                update.updateData("customers",set, where);
+//                            } catch (SQLException e) {
+//                                e.printStackTrace();
+//                            }
+                        }
+                    }
+            );
+            */
+
+
+            /*
+                   TableColumn firstNameCol = new TableColumn("First Name");
+        firstNameCol.setMinWidth(100);
+        firstNameCol.setCellValueFactory(
+            new PropertyValueFactory<Person, String>("firstName"));
+        firstNameCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        firstNameCol.setOnEditCommit(
+            new EventHandler<CellEditEvent<Person, String>>() {
+                @Override
+                public void handle(CellEditEvent<Person, String> t) {
+                    ((Person) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())
+                            ).setFirstName(t.getNewValue());
+                }
+            }
+        );
+             */
+
+
+
+
+
+
+            customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("ID"));
+            //customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("name"));
             customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("address"));
             customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("phone"));
             customerDivisionTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel, String>("divisionName"));
@@ -465,4 +530,44 @@ public class mainController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    /**There is a bit of Java magic happening in this function.
+     * This function generalizes the EventHandler when editing a TableView TableColumn.
+     * It can be reused for each edit event for the customer and appointment tables,
+     * with the exception of the contact and division columns.  I haven't worked out
+     * how to handle those two columns just yet.  They will likely need a drop down menu.
+     * The return type is required TableColumn.setOnEditCommit().
+     *
+     * @return new EventHandler<TableColumn.CellEditEvent<model, data type>>()
+     */
+    private EventHandler<TableColumn.CellEditEvent<customerModel, String>> editEvent() {
+        return (new EventHandler<TableColumn.CellEditEvent<customerModel, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<customerModel, String> cellEditEvent) {
+                String setColumn = String.valueOf(cellEditEvent.getTableColumn().getText());
+                String set = cellEditEvent.getNewValue();
+                String where = cellEditEvent.getRowValue().getID();
+                String whereColumn = cellEditEvent.getTableView().getColumns().get(0).getText();
+                String table = null;
+
+                set = setColumn + " = '" + set + "'";
+                //the if statement checks if the customer table or appointment table is being edited
+                //and changes the values of the where query accordingly
+                if (whereColumn.equals("Customer_ID")) {
+                    where = whereColumn + " = " + where;
+                    table = "customers";
+                } else {
+                    where = "Appointment_ID = " + where;
+                    table = "appointments";
+                }
+
+                try {
+                    update.updateData(table, set, where);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
 }

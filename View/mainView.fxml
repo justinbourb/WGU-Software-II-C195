@@ -26,8 +26,8 @@
                   <TextField fx:id="customersSearchText" layoutX="749.0" layoutY="25.0" onKeyReleased="#onKeyReleasedCustomerSearchText" prefHeight="25.0" prefWidth="157.0" promptText="Search by ID or Name" />
                   <TableView fx:id="customerTable" layoutX="13.0" layoutY="57.0" prefHeight="196.0" prefWidth="893.0">
                     <columns>
-                      <TableColumn fx:id="customerIDTableColumn" prefWidth="75.0" text="Customer ID" />
-                      <TableColumn fx:id="customerNameTableColumn" prefWidth="272.0" text="Name" />
+                      <TableColumn fx:id="customerIDTableColumn" prefWidth="82.0" text="Customer_ID" />
+                      <TableColumn fx:id="customerNameTableColumn" prefWidth="265.0" text="Customer_Name" />
                         <TableColumn fx:id="customerAddressTableColumn" prefWidth="200.0" text="Address" />
                         <TableColumn fx:id="customerDivisionTableColumn" prefWidth="200.0" text="Division" />
                         <TableColumn fx:id="customerPhoneTableColumn" prefWidth="140.0" text="Phone" />
@@ -56,9 +56,9 @@
                         <TableColumn fx:id="appointmentIDTableColumn" prefWidth="28.0" text="ID" />
                         <TableColumn fx:id="custIDTableColumn" prefWidth="56.0" text="Cust. ID" />
                         <TableColumn fx:id="titleTableColumn" prefWidth="115.0" text="Title" />
-                        <TableColumn fx:id="appointmentDescripColumn" prefWidth="115.0" text="Descrip." />
+                        <TableColumn fx:id="appointmentDescripColumn" prefWidth="115.0" text="Description" />
                         <TableColumn fx:id="appointmentLocationTableColumn" prefWidth="115.0" text="Location" />
-                        <TableColumn fx:id="contactTableColumn" prefWidth="115.0" text="Contact" />
+                        <TableColumn fx:id="contactTableColumn" prefWidth="115.0" text="Contact_ID" />
                         <TableColumn fx:id="typeTableColumn" prefWidth="115.0" text="Type" />
                         <TableColumn fx:id="appointmentStartTableColumn" prefWidth="115.0" text="Start" />
                         <TableColumn fx:id="appointmentEndTableColumn" prefWidth="115.0" text="End" />
