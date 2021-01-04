@@ -13,7 +13,7 @@ public class loginAttempts {
      public static void recordLoginAttempts(String userNameAndStatus) {
         Path path = fileFunctions.findPath();
         fileFunctions.createPath(path);
-        fileFunctions.newBufferedReader(path);
+        //fileFunctions.newBufferedReader(path);
         try {
             fileFunctions.newBufferedWriter(path, timeFunctions.localDateNow() + " " + userNameAndStatus + System.lineSeparator());
         } catch (Exception e) {

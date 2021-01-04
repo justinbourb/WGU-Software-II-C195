@@ -7,6 +7,7 @@ import DAO.update;
 import Helpers.appointmentTableData;
 import Helpers.confirmView;
 import Helpers.customerTableData;
+import Helpers.switchStage;
 import Model.appointmentModel;
 import Model.customerModel;
 import javafx.collections.ObservableList;
@@ -14,6 +15,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,17 +32,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
-import Helpers.switchStage;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
-
 import static Helpers.appointmentTableData.getAppointmentDataDateRange;
 import static Helpers.timeFunctions.getMonthFromDateTime;
 import static Helpers.timeFunctions.getUTCTimeZone;
-import static javafx.scene.control.cell.TextFieldTableCell.forTableColumn;
 
 /** This class controls the mainView.fxml */
 public class mainController implements Initializable {
@@ -177,7 +175,7 @@ public class mainController implements Initializable {
     /** This function will query the database for any appointments within 15 minutes of
      * the users local time.  If appointments are found it will display to the GUI,
      * else the GUI will display no upcoming appointments.
-     * @throws ParseException
+     * @throws ParseException, an exception
      */
     private void checkFifteenMinutes() throws ParseException {
         //reset error text to prevent duplicate messages
@@ -444,68 +442,14 @@ public class mainController implements Initializable {
             customerTable.setEditable(true);
             customerTable.setItems(customerData);
 
+
+            customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("ID"));
             //setCellValueFactory prefills tableColumn with data from the database
             customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("name"));
-            //setCellFactory allows editing
+            //setCellFactory allows editing, by creating a text field when double clicked
             customerNameTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
             //setOnEditCommit is what happens after the edit takes place
             customerNameTableColumn.setOnEditCommit(editEvent());
-
-
-            /*
-            customerNameTableColumn.setOnEditCommit(
-                    new EventHandler<TableColumn.CellEditEvent<customerModel, String>>() {
-                        @Override
-                        public void handle(TableColumn.CellEditEvent<customerModel, String> cellEditEvent) {
-                            String setColumn = String.valueOf(cellEditEvent.getTableColumn().getText());
-                            String set = cellEditEvent.getNewValue();
-                            String where = cellEditEvent.getRowValue().getID();
-                            String whereColumn = cellEditEvent.getTableView().getColumns().get(0).getText();
-
-                            set = setColumn + " = '" + set +"'";
-
-                            if(whereColumn.equals("Customer_ID")){
-                                where = whereColumn + " = " + where;
-                            } else {
-                                where = "Appointment_ID = " + where;
-                            }
-
-//                            try {
-//                                update.updateData("customers",set, where);
-//                            } catch (SQLException e) {
-//                                e.printStackTrace();
-//                            }
-                        }
-                    }
-            );
-            */
-
-
-            /*
-                   TableColumn firstNameCol = new TableColumn("First Name");
-        firstNameCol.setMinWidth(100);
-        firstNameCol.setCellValueFactory(
-            new PropertyValueFactory<Person, String>("firstName"));
-        firstNameCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        firstNameCol.setOnEditCommit(
-            new EventHandler<CellEditEvent<Person, String>>() {
-                @Override
-                public void handle(CellEditEvent<Person, String> t) {
-                    ((Person) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setFirstName(t.getNewValue());
-                }
-            }
-        );
-             */
-
-
-
-
-
-
-            customerIDTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("ID"));
-            //customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("name"));
             customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("address"));
             customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel,String>("phone"));
             customerDivisionTableColumn.setCellValueFactory(new PropertyValueFactory<customerModel, String>("divisionName"));
@@ -548,7 +492,7 @@ public class mainController implements Initializable {
                 String set = cellEditEvent.getNewValue();
                 String where = cellEditEvent.getRowValue().getID();
                 String whereColumn = cellEditEvent.getTableView().getColumns().get(0).getText();
-                String table = null;
+                String table;
 
                 set = setColumn + " = '" + set + "'";
                 //the if statement checks if the customer table or appointment table is being edited

@@ -1,31 +1,20 @@
 package Controller;
 
-import DAO.connect;
-import Helpers.*;
-import Model.appointmentModel;
-import javafx.collections.ObservableList;
+import Helpers.loginAttempts;
+import Helpers.switchStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.fxml.Initializable;
 
-import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static DAO.read.readData;
-import static Helpers.appointmentTableData.getAppointmentDataDateRange;
-import static Helpers.timeFunctions.getUTCTimeZone;
 
 /** This class controls the mainView.fxml */
 public class loginController  implements Initializable {
@@ -58,12 +47,9 @@ public class loginController  implements Initializable {
      * in English or French based on the user's location.
      *
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
-     * @exception SQLException, an SQL Exception
-     * @exception ClassNotFoundException, a Class Not Found Exception
-     * @exception IOException, an IOException
      */
     @FXML
-    public void submitButtonAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException, IOException {
+    public void submitButtonAction(ActionEvent actionEvent) {
         String name = usernameTextField.getText();
         String password = passwordTextField.getText();
         String column = "*";
@@ -73,7 +59,7 @@ public class loginController  implements Initializable {
         
         //try with resources will automatically close the database connection
         try(ResultSet results = readData(column, table, where)) {
-            ;
+
             //Calling results.next() "consumes" the next result, so only use this method as needed
             //How to peek at or check this value?
             if (results.next()) {
@@ -114,7 +100,6 @@ public class loginController  implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Locale locale = Locale.getDefault();
         String language = locale.getDisplayLanguage();
-        System.out.println(language);
         locationLabel.setText("Your computer location is set to: " + locale);
         if (language.equals("français")) {
             // translate code to French

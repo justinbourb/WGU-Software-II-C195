@@ -17,13 +17,13 @@ public class fileFunctions {
     public static void createPath(Path path) {
         if (!Files.exists(path)) {
             try {
-                System.out.println("creating file " + path);
+                //System.out.println("creating file " + path);
                 Files.createFile(path);
             } catch (IOException e) {
                 System.err.println(e);
             }
         } else {
-            System.out.println("file already exists");
+            //System.out.println("file already exists");
         }
     }
 
