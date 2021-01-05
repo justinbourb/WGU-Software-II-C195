@@ -29,6 +29,7 @@ public class confirmView {
     //user clicked false
     return false;
      */
+    //wait for the result (user clicks a button) and return true if ok is pressed
     //functional programming is more efficient
     return result.filter(buttonType -> (buttonType == ButtonType.OK)).isPresent();
   }

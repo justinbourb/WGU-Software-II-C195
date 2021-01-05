@@ -16,6 +16,7 @@ public class timeFunctions {
      * @return returnValue, a UTC time in String format*/
     public static String localDateNow() {
         //Lambda expressions are beneficial in reducing the number of lines of code.
+        //sets nowUTC to UTC time
         Supplier<ZonedDateTime> nowUTC = () -> ZonedDateTime.now(ZoneOffset.UTC);
         //Supplier<ZonedDateTime> now = () -> ZonedDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
