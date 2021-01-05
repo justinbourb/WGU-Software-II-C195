@@ -11,7 +11,11 @@ Reports are available through search boxes which display custom data based on th
 Author: Justin Bourbonniere  
 Contact: jbourbo@wgu.edu  
 Version: 1.0  
-Date: 2020-12-31
+Date: 2020-12-31  
+Made with:  
+ IntelliJ IDEA 2020.2.2 (Edu)  
+ OpenJDK Platform binary 11.0.4.0  
+ JavaFX-SDK-11.0.2  
 
 ## Requirements
 1. IntelliJ (download and install)
