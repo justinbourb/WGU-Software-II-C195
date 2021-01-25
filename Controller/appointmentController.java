@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
 import static Helpers.appointmentTableData.getAppointmentDataDateRange;
 import static Helpers.timeFunctions.*;
 
-
+/** This class handles the appointment Model */
 public class appointmentController implements Initializable {
     @FXML
     private Label guiLabel;

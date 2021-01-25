@@ -107,7 +107,7 @@ public class appointmentTableData {
         String column = "*";
         String table = "appointments";
 
-        String where = "Start >= '" + before + "' and Start <= '" + after + "'";
+        String where = "Start <= '" + before + "' and End >= '" + after + "'";
         ResultSet results = read.readData(column, table, where, connection);
 
         while (results.next()) {

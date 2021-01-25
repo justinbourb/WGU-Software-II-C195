@@ -40,7 +40,7 @@ public class read {
     * This overload function is for all results (no WHERE clause).
     * @param column, the column name as a string
     * @param table, the table as a string
-    * @exception SQLException, an SQL Exception
+       * @exception SQLException, an SQL Exception
     * @return results, a ResultsSet of the data found
     */
 

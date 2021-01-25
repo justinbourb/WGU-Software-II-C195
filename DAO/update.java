@@ -15,7 +15,6 @@ public class update {
     * @param set, the data to set
     * @param where, the where as a string
     * @exception SQLException, an SQL Exception
-    * @return results, a ResultsSet of the data found
     */
     public static void updateData(String table, String set, String where) throws SQLException {
         /* Example usage:
