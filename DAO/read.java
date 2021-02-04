@@ -1,9 +1,6 @@
 package DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**This class is part of the Database Access Object design pattern. 
 * It is used to read data from the database.*/
@@ -31,6 +28,20 @@ public class read {
         try {
             String queryText = "SELECT " + column + " FROM " + table + " WHERE " + where;
             query = connection.prepareStatement(queryText);
+        }
+        catch (Exception e) {}
+        return query.executeQuery();
+    }
+
+    public static ResultSet readData(String column, String table, String where, Connection connection, Timestamp start, Timestamp end) throws SQLException {
+        PreparedStatement query = null;
+        //using ? in the query allows the use of paramterIndex which starts at 1, not 0
+        //this allows a Timestamp to be be written or read from the database
+        try {
+            String queryText = "SELECT " + column + " FROM " + table + " WHERE " + where;
+            query = connection.prepareStatement(queryText);
+            query.setTimestamp(1, start);
+            query.setTimestamp(2, end);
         }
         catch (Exception e) {}
         return query.executeQuery();

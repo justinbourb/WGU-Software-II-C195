@@ -1,9 +1,6 @@
 package DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**This class is part of the Database Access Object design pattern. 
 * It is used to create data from the database.*/
@@ -25,9 +22,31 @@ public class create {
         try(Connection connection = connect.startConnection()) {
             String statement = "INSERT INTO " + table + " (" + columns + ")" + " VALUES (" + values + ")";
             PreparedStatement query = connection.prepareStatement(statement);
+
             query.executeUpdate();
+
         } catch (Exception e) {
             System.out.println("Creation was not successful.");
+        }
+    }
+
+
+    public static void createData(String table, String columns, String values, Timestamp start, Timestamp end) throws SQLException {
+        /* example usage:
+        INSERT INTO Customers (CustomerName, City, Country)
+        VALUES ('Cardinal', 'Stavanger', 'Norway');
+        */
+        //using ? (not '?') in the Values field allows the use of the parameterIndex which starts at 1 instead of 0
+        try(Connection connection = connect.startConnection()) {
+            String statement = "INSERT INTO " + table + " (" + columns + ")" + " VALUES (" + values + ")";
+            PreparedStatement query = connection.prepareStatement(statement);
+            query.setTimestamp(1, start);
+            query.setTimestamp(2, end);
+            query.executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println("Creation was not successful.");
+            e.printStackTrace();
         }
     }
 }

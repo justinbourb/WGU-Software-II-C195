@@ -17,15 +17,16 @@ import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import static Helpers.appointmentTableData.checkOverlappingAppointmentsDatabaseLogic;
 import static Helpers.appointmentTableData.getAppointmentDataDateRange;
 import static Helpers.timeFunctions.*;
 
@@ -142,13 +143,14 @@ public class appointmentController implements Initializable {
      * @return Returns true if no overlapping appointments or false if an overlap is detected.
      * @throws ParseException
      */
-    private boolean checkOverlappingAppointments(String start, String end) throws ParseException {
+
+    private boolean checkOverlappingAppointments(Timestamp start, Timestamp end, String appointment_ID) throws ParseException {
         //reset error text to prevent duplicate messages
         errorTextArea.clear();
         ObservableList<appointmentModel> appointments = null;
 
         try (Connection connection = connect.startConnection()){
-            appointments = getAppointmentDataDateRange(start, end, connection);
+            appointments = checkOverlappingAppointmentsDatabaseLogic(start, end, connection, appointment_ID);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -191,11 +193,14 @@ public class appointmentController implements Initializable {
      * a time range from 8am to 10pm EST.  It should
      * convert the time range for the user's default time zone.*/
     private void initSpinner() throws ParseException {
-        //convert start time: 8am EST to local time zone
-        Integer startHours = Integer.parseInt(getHoursFromDateTime(getLocalTimeZone("2020-12-31 13:00:00")));
-        //convert end time: 9pm EST to local time zone (appointments up to 9:59pm, closing at 10pm)
-        Integer endHours = Integer.parseInt(getHoursFromDateTime(getLocalTimeZone("2020-12-31 02:00:00")));
 
+        //Opening time is 8am EST(-5) which is 13:00 UTC
+        //The goal here is to set the starting time to the user's timezone equivalent
+        LocalTime utcLocalTime = LocalTime.of(13, 00);
+        Integer startHours = getStartingHoursInLocalTimeZone("start");
+        //convert end time: 9pm EST to local time zone (appointments up to 9:59pm, closing at 10pm)
+        //9pm EST(-5) is 02:00 UTC
+        Integer endHours = getStartingHoursInLocalTimeZone("end");
 
         SpinnerValueFactory<Integer> startHoursFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(startHours, endHours, startHours);
         SpinnerValueFactory<Integer> startMinutesFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59, 00);
@@ -225,14 +230,17 @@ public class appointmentController implements Initializable {
                 titleText.setText(appointmentResults.getString("Title"));
                 locationText.setText(appointmentResults.getString("Location"));
                 typeText.setText(appointmentResults.getString("Type"));
-                startMinSpinner.getValueFactory().setValue(Integer.valueOf(getMinutesFromDateTime(getLocalTimeZone(appointmentResults.getString("Start")))));
-                startHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(getLocalTimeZone(appointmentResults.getString("Start")))));
-                startDatePicker.getEditor().setText(getDateFromDateTime(getLocalTimeZone(appointmentResults.getString("Start"))));
-                startDatePicker.setValue(LocalDate.parse(getDateFromDateTime(getLocalTimeZone(appointmentResults.getString("Start")))));
-                endMinSpinner.getValueFactory().setValue(Integer.valueOf(getMinutesFromDateTime(getLocalTimeZone(appointmentResults.getString("End")))));
-                endHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(getLocalTimeZone(appointmentResults.getString("End")))));
-                endDatePicker.getEditor().setText(getDateFromDateTime(getLocalTimeZone(appointmentResults.getString("End"))));
-                endDatePicker.setValue(LocalDate.parse(getDateFromDateTime(getLocalTimeZone(appointmentResults.getString("End")))));
+                //appointmentResults.getTimestamp: pull Timestamp in UTC time from the Database
+                //getLocalTimeZone: convert Timestamp into local time zone LocalDateTime
+                //getMinutesFromDateTime: accept LocalDateTime and modify to date or time
+                startMinSpinner.getValueFactory().setValue(Integer.valueOf(getMinutesFromDateTime(getLocalDateTimeFromTimeStamp(appointmentResults.getTimestamp("Start")))));
+                startHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(getLocalDateTimeFromTimeStamp(appointmentResults.getTimestamp("Start")))));
+                startDatePicker.getEditor().setText(getDateFromDateTime(getLocalDateTimeFromTimeStamp(appointmentResults.getTimestamp("Start"))));
+                startDatePicker.setValue(LocalDate.parse(getDateFromDateTime(getLocalDateTimeFromTimeStamp(appointmentResults.getTimestamp("Start")))));
+                endMinSpinner.getValueFactory().setValue(Integer.valueOf(getMinutesFromDateTime(getLocalDateTimeFromTimeStamp(appointmentResults.getTimestamp("End")))));
+                endHourSpinner.getValueFactory().setValue(Integer.valueOf(getHoursFromDateTime(getLocalDateTimeFromTimeStamp(appointmentResults.getTimestamp("End")))));
+                endDatePicker.getEditor().setText(getDateFromDateTime(getLocalDateTimeFromTimeStamp(appointmentResults.getTimestamp("End"))));
+                endDatePicker.setValue(LocalDate.parse(getDateFromDateTime(getLocalDateTimeFromTimeStamp(appointmentResults.getTimestamp("End")))));
                 descriptionTextArea.appendText(appointmentResults.getString("Description"));
                 //get the customer name from the database
                 ResultSet nameResults = read.readData("Customer_Name", "customers", "Customer_ID = " + appointmentResults.getString("Customer_ID"), connection);
@@ -256,7 +264,7 @@ public class appointmentController implements Initializable {
 
     /** This function formats the date picker fields (start and end).
      */
-    private void formatDate(){
+    private void formatDatePickerFields(){
 //        startMinSpinner.getValueFactory().setValue(45);
 //        startDatePicker.getEditor().setText("2020-07-25");
 //        startDatePicker.setValue(LocalDate.of(2020,07,25));
@@ -313,29 +321,43 @@ public class appointmentController implements Initializable {
         }
         String endTime = endHours + ":" + endMin;
 
-        String start = getUTCTimeZone(getDateTimeFromInput(startDate + " " + startTime));
-        String end = getUTCTimeZone(getDateTimeFromInput(endDate + " " + endTime));
+        /*
+        This is where I suspect something is wrong.
+         */
+//        Timestamp startTimeStamp = getUTCTimestampFromString(startDate + " " + startTime);
+//        Timestamp endTimeStamp = getUTCTimestampFromString(endDate + " " + endTime);
+        LocalDateTime startLocalDateTime = getLocalDateTimeFromString(startDate + " " + startTime);
+        Timestamp startTimeStamp = Timestamp.valueOf(startLocalDateTime);
+        LocalDateTime endLocalDateTime = getLocalDateTimeFromString(endDate + " " + endTime);
+        Timestamp endTimeStamp = Timestamp.valueOf(endLocalDateTime);
+
         String description = descriptionTextArea.getText();
         String customerID = customerIDText.getText();
         String contactID = contactIDText.getText();
 
         //check for overlapping appointments and prevent saving if so
-        boolean anyOverlappingAppointments = checkOverlappingAppointments(start,end);
+        String appointmentID = appointmentIDText.getText();
+        boolean anyOverlappingAppointments = checkOverlappingAppointments(startTimeStamp,endTimeStamp, appointmentID);
         if(anyOverlappingAppointments) {
-            //insert values into database if creating a new customer
+
             if (appointmentModel.editAppointmentButtonClicked == false) {
+                //using ? for start and end times allows the use of parameterIndex, which allows writing the
+                //Timestamp to the database
                 String columns = "Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID";
-                String values = ("'" + title + "', '" + description + "', '" + location + "', '" + type + "', '" + start + "', '"
-                        + end + "', '" + customerID + "', '" + "1" + "', '" + contactID + "'");
-                create.createData("appointments", columns, values);
+                String values = ("'" + title + "', '" + description + "', '" + location + "', '" + type + "', " + "?" + ", "
+                        + "?" + ", '" + customerID + "', '" + "1" + "', '" + contactID + "'");
+                create.createData("appointments", columns, values, startTimeStamp, endTimeStamp);
+
                 //else update values in the database if editing a customer
             } else {
                 //SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
                 String set = "Title = '" + title + "', Description = '" + description + "', Location = '" + location + "', Type = '" +
-                        type + "', Start = '" + start + "', End = '" + end + "', Customer_ID = '" + customerID + "', User_ID = '" + "1"
+                        type + "', Start = '" + startTimeStamp + "', End = '" + endTimeStamp + "', Customer_ID = '" + customerID + "', User_ID = '" + "1"
                         + "', Contact_ID = '" + contactID + "'";
                 String where = "Appointment_ID = " + appointmentIDText.getText();
                 update.updateData("appointments", set, where);
+                //uses query.setTimestamp
+                update.updateDataTimestamp("appointments", "Start = '" + startTimeStamp + "'", where, startTimeStamp, endTimeStamp);
             }
 
             String resourceURL = "/View/mainView.fxml";
@@ -365,7 +387,7 @@ public class appointmentController implements Initializable {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        formatDate();
+        formatDatePickerFields();
         //It should fill combo boxes on load
         //It should use try with resources to close connection automatically
         try (var connection = connect.startConnection()) {

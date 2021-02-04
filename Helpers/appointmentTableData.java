@@ -2,20 +2,18 @@ package Helpers;
 
 import DAO.read;
 import Model.appointmentModel;
-import Model.customerModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
-import static Helpers.timeFunctions.getLocalTimeZone;
-import static Helpers.timeFunctions.localDateNow;
+import static Helpers.timeFunctions.*;
 
 /** This class generates appointmentTableData */
 public class appointmentTableData {
@@ -90,19 +88,50 @@ public class appointmentTableData {
             String Location = results.getString("Location");
             String Contact_ID = results.getString("Contact_ID");
             String Type = results.getString("Type");
-            String Start = results.getString("Start");
+            Timestamp Start = results.getTimestamp("Start");
             //convert time to local time zone
-            Start = getLocalTimeZone(Start);
-            String End = results.getString("End");
+            //String startString = timeFunctions.getLocalTimeZoneString(Start);
+            String startString = getTimeZoneString(Start);
+            Timestamp End = results.getTimestamp("End");
             //convert time to local time zone
-            End = getLocalTimeZone(End);
-            appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, Start, End);
+            //String endString = timeFunctions.getLocalTimeZoneString(End);
+            String endString = getTimeZoneString(End);
+            appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, startString, endString);
             appointmentTableData.add(appointment);
         }
         return appointmentTableData;
     }
 
-    public static ObservableList<appointmentModel> getAppointmentDataDateRange(String before, String after, Connection connection) throws SQLException, ParseException {
+//    public static ObservableList<appointmentModel> getAppointmentDataDateRange(String before, String after, Connection connection) throws SQLException, ParseException {
+//        ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();
+//        String column = "*";
+//        String table = "appointments";
+//
+//        String where = "Start <= '" + before + "' and End >= '" + after + "'";
+//        ResultSet results = read.readData(column, table, where, connection);
+//
+//        while (results.next()) {
+//
+//            String Appointment_ID = results.getString("Appointment_ID");
+//            String Customer_ID = results.getString("Customer_ID");
+//            String Title = results.getString("Title");
+//            String Description = results.getString("Description");
+//            String Location = results.getString("Location");
+//            String Contact_ID = results.getString("Contact_ID");
+//            String Type = results.getString("Type");
+//            Timestamp Start = results.getTimestamp("Start");
+//            //convert time to local time zone
+//            String startString = getLocalTimeZone(Start);
+//            Timestamp End = results.getTimestamp("End");
+//            //convert time to local time zone
+//            String endString = getLocalTimeZone(End);
+//            appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, startString, endString);
+//            appointmentTableData.add(appointment);
+//        }
+//        return appointmentTableData;
+//    }
+
+    public static ObservableList<appointmentModel> getAppointmentDataDateRange(Timestamp before, Timestamp after, Connection connection) throws SQLException, ParseException {
         ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();
         String column = "*";
         String table = "appointments";
@@ -119,16 +148,102 @@ public class appointmentTableData {
             String Location = results.getString("Location");
             String Contact_ID = results.getString("Contact_ID");
             String Type = results.getString("Type");
-            String Start = results.getString("Start");
+            Timestamp Start = results.getTimestamp("Start");
             //convert time to local time zone
-            Start = getLocalTimeZone(Start);
-            String End = results.getString("End");
+            String startString = timeFunctions.getLocalTimeZoneString(Start);
+            Timestamp End = results.getTimestamp("End");
             //convert time to local time zone
-            End = getLocalTimeZone(End);
-            appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, Start, End);
+            String endString = timeFunctions.getLocalTimeZoneString(End);
+            appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, startString, endString);
             appointmentTableData.add(appointment);
         }
         return appointmentTableData;
     }
 
+    public static ObservableList<appointmentModel> getAppointmentDataDateRange(Timestamp before, Timestamp after, Connection connection, String appointment_ID) throws SQLException, ParseException {
+        ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();
+        String column = "*";
+        String table = "appointments";
+        String where = "";
+        if(!appointment_ID.isEmpty()){
+            where = "Start <= ? and End >= ? and Appointment_ID != " + appointment_ID;
+        } else {
+            where = "Start <= ? and End >= ?";
+        }
+
+        //using ? in the query allows the use of paramterIndex which starts at 1, not 0
+        //this allows a Timestamp to be be written or read from the database
+        ResultSet results = read.readData(column, table, where, connection, before, after);
+
+        while (results.next()) {
+
+            String Appointment_ID = results.getString("Appointment_ID");
+            String Customer_ID = results.getString("Customer_ID");
+            String Title = results.getString("Title");
+            String Description = results.getString("Description");
+            String Location = results.getString("Location");
+            String Contact_ID = results.getString("Contact_ID");
+            String Type = results.getString("Type");
+            Timestamp Start = results.getTimestamp("Start");
+            //convert time to local time zone
+            String startString = timeFunctions.getLocalTimeZoneString(Start);
+            Timestamp End = results.getTimestamp("End");
+            //convert time to local time zone
+            String endString = timeFunctions.getLocalTimeZoneString(End);
+            appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, startString, endString);
+            appointmentTableData.add(appointment);
+        }
+        return appointmentTableData;
+    }
+
+    /**This function will query the DB and return an ObservableList of any overlapping appointments.
+     *
+     * @param before a Timestamp of the start of the meeting to check for overlap
+     * @param after a Timestmap of the end of the meeting to check for overlap
+     * @param connection a Connection to the database
+     * @param appointment_ID the appointment ID of the appoint which is being checked
+     * @return an ObservableList of any overlapping appointments
+     * @throws SQLException an exception
+     */
+    public static ObservableList<appointmentModel> checkOverlappingAppointmentsDatabaseLogic(Timestamp before, Timestamp after, Connection connection, String appointment_ID) throws SQLException{
+        ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();
+        String column = "*";
+        String table = "appointments";
+        String where = "Appointment_ID != " + appointment_ID;
+        ResultSet results = read.readData(column, table, where, connection);
+        LocalDateTime startTimeToCheckLocalDateTime = before.toLocalDateTime();
+        LocalDateTime endTimeToCheckLocalDateTime = after.toLocalDateTime();
+
+
+        while (results.next()) {
+            Timestamp Start = results.getTimestamp("Start");
+            Timestamp End = results.getTimestamp("End");
+            LocalDateTime dbStartLocalDateTime = Start.toLocalDateTime();
+            LocalDateTime dbEndLocalDateTime = End.toLocalDateTime();
+
+            String Appointment_ID = results.getString("Appointment_ID");
+            String Customer_ID = results.getString("Customer_ID");
+            String Title = results.getString("Title");
+            String Description = results.getString("Description");
+            String Location = results.getString("Location");
+            String Contact_ID = results.getString("Contact_ID");
+            String Type = results.getString("Type");
+            //convert to string for appointment object
+            String startString = getTimeString(Start);
+            //convert to string for appointment object
+            String endString = getTimeString(End);
+
+            //check if an appointment is within the time range of an existing appointment  (first two or statements)
+            //check if an existing appointments are within the appointment to check (third or statement)
+            //if so, add the appointment to the results (appointmentTableData)
+            if (startTimeToCheckLocalDateTime.isAfter(dbStartLocalDateTime) && startTimeToCheckLocalDateTime.isBefore(dbEndLocalDateTime) ||
+                    (endTimeToCheckLocalDateTime.isAfter(dbStartLocalDateTime) && endTimeToCheckLocalDateTime.isBefore(dbEndLocalDateTime)) ||
+                    (dbStartLocalDateTime.isAfter(startTimeToCheckLocalDateTime) && dbStartLocalDateTime.isBefore(endTimeToCheckLocalDateTime))){
+                appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, startString, endString);
+                appointmentTableData.add(appointment);
+            }
+
+        }
+        return appointmentTableData;
+    }
 }

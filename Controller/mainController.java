@@ -4,10 +4,7 @@ package Controller;
 import DAO.connect;
 import DAO.delete;
 import DAO.update;
-import Helpers.appointmentTableData;
-import Helpers.confirmView;
-import Helpers.customerTableData;
-import Helpers.switchStage;
+import Helpers.*;
 import Model.appointmentModel;
 import Model.customerModel;
 import javafx.collections.ObservableList;
@@ -26,6 +23,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,8 +31,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
 import static Helpers.appointmentTableData.getAppointmentDataDateRange;
-import static Helpers.timeFunctions.getMonthFromDateTime;
-import static Helpers.timeFunctions.getUTCTimeZone;
+import static Helpers.timeFunctions.*;
 
 /** This class controls the mainView.fxml */
 public class mainController implements Initializable {
@@ -150,7 +147,6 @@ public class mainController implements Initializable {
     @FXML
     private TextArea errorTextArea;
 
-    //TODO: make table views editable
 
     /**This function controls the addCustomers button.
      * @param actionEvent, a JavaFX ActionEvent provided by a button click
@@ -184,10 +180,10 @@ public class mainController implements Initializable {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nowPlusFifteen = now.plus(15, ChronoUnit.MINUTES);
         DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedNowPlusFifteen = getUTCTimeZone(nowPlusFifteen.format(pattern));
-        String formattedNow =  getUTCTimeZone(now.format(pattern));
+        Timestamp utcNowPlusFifteen = getUTCTimestampFromLocalDateTime(nowPlusFifteen);
+        Timestamp utcNow =  getUTCTimestampFromLocalDateTime(now);
         try (Connection connection = connect.startConnection()){
-            appointments = getAppointmentDataDateRange(formattedNow, formattedNowPlusFifteen, connection);
+            appointments = getAppointmentDataDateRange(utcNow, utcNowPlusFifteen, connection);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -456,7 +452,7 @@ public class mainController implements Initializable {
             customerTable.getSelectionModel().select(0);
 
 
-
+            //populate the Appointment table from the appointmentData observable list
             appointmentTable.setPlaceholder(new Label("The table is empty or no search results found."));
             appointmentTable.setEditable(true);
             appointmentTable.setItems(appointmentData);
