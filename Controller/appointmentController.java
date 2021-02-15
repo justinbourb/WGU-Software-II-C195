@@ -8,6 +8,7 @@ import Helpers.contactTableData;
 import Helpers.customerTableData;
 import Helpers.switchStage;
 import Model.appointmentModel;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -147,7 +148,7 @@ public class appointmentController implements Initializable {
     private boolean checkOverlappingAppointments(Timestamp start, Timestamp end, String appointment_ID) throws ParseException {
         //reset error text to prevent duplicate messages
         errorTextArea.clear();
-        ObservableList<appointmentModel> appointments = null;
+        ObservableList<appointmentModel> appointments = FXCollections.observableArrayList();
 
         try (Connection connection = connect.startConnection()){
             appointments = checkOverlappingAppointmentsDatabaseLogic(start, end, connection, appointment_ID);

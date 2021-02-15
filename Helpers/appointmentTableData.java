@@ -61,10 +61,16 @@ public class appointmentTableData {
             String Location = results.getString("Location");
             String Contact_ID = results.getString("Contact_ID");
             String Type = results.getString("Type");
-            String Start = results.getString("Start");
-            String End = results.getString("End");
+            Timestamp Start = results.getTimestamp("Start");
+            //convert time to local time zone
+            //String startString = timeFunctions.getLocalTimeZoneString(Start);
+            String startString = getTimeZoneString(Start);
+            Timestamp End = results.getTimestamp("End");
+            //convert time to local time zone
+            //String endString = timeFunctions.getLocalTimeZoneString(End);
+            String endString = getTimeZoneString(End);
 
-            appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, Start, End);
+            appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, startString, endString);
             appointmentTableData.add(appointment);
         }
         return appointmentTableData;
@@ -101,35 +107,6 @@ public class appointmentTableData {
         }
         return appointmentTableData;
     }
-
-//    public static ObservableList<appointmentModel> getAppointmentDataDateRange(String before, String after, Connection connection) throws SQLException, ParseException {
-//        ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();
-//        String column = "*";
-//        String table = "appointments";
-//
-//        String where = "Start <= '" + before + "' and End >= '" + after + "'";
-//        ResultSet results = read.readData(column, table, where, connection);
-//
-//        while (results.next()) {
-//
-//            String Appointment_ID = results.getString("Appointment_ID");
-//            String Customer_ID = results.getString("Customer_ID");
-//            String Title = results.getString("Title");
-//            String Description = results.getString("Description");
-//            String Location = results.getString("Location");
-//            String Contact_ID = results.getString("Contact_ID");
-//            String Type = results.getString("Type");
-//            Timestamp Start = results.getTimestamp("Start");
-//            //convert time to local time zone
-//            String startString = getLocalTimeZone(Start);
-//            Timestamp End = results.getTimestamp("End");
-//            //convert time to local time zone
-//            String endString = getLocalTimeZone(End);
-//            appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, startString, endString);
-//            appointmentTableData.add(appointment);
-//        }
-//        return appointmentTableData;
-//    }
 
     public static ObservableList<appointmentModel> getAppointmentDataDateRange(Timestamp before, Timestamp after, Connection connection) throws SQLException, ParseException {
         ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();

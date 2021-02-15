@@ -7,6 +7,7 @@ import DAO.update;
 import Helpers.*;
 import Model.appointmentModel;
 import Model.customerModel;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,16 +21,14 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
+import static Helpers.appointmentTableData.getAppointmentData;
 import static Helpers.appointmentTableData.getAppointmentDataDateRange;
 import static Helpers.timeFunctions.*;
 
@@ -168,22 +167,20 @@ public class mainController implements Initializable {
         switchStage.switchStage(actionEvent, resourceURL);
     }
 
-    /** This function will query the database for any appointments within 15 minutes of
-     * the users local time.  If appointments are found it will display to the GUI,
-     * else the GUI will display no upcoming appointments.
-     * @throws ParseException, an exception
+    /** This function will query the database for all appointments
+     *  the display any appointments within 15 minutes of
+     * the users local time else the GUI will display no upcoming appointments.
      */
-    private void checkFifteenMinutes() throws ParseException {
+
+    private void checkFifteenMinutes() {
         //reset error text to prevent duplicate messages
         errorTextArea.clear();
-        ObservableList<appointmentModel> appointments = null;
+        ObservableList<appointmentModel> appointments = FXCollections.observableArrayList();
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nowPlusFifteen = now.plus(15, ChronoUnit.MINUTES);
-        DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Timestamp utcNowPlusFifteen = getUTCTimestampFromLocalDateTime(nowPlusFifteen);
-        Timestamp utcNow =  getUTCTimestampFromLocalDateTime(now);
+
         try (Connection connection = connect.startConnection()){
-            appointments = getAppointmentDataDateRange(utcNow, utcNowPlusFifteen, connection);
+            appointments = getAppointmentData(connection);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -194,7 +191,17 @@ public class mainController implements Initializable {
             // A custom message should be displayed in the user interface and include the appointment ID, date, and time.
         } else {
             for (appointmentModel appointment : appointments) {
-                errorTextArea.appendText("Appointment ID: " + appointment.getAppointment_ID() + " Is starting at: " + appointment.getStart());
+                //find the appointment Start and convert it into a LocalDateTime for comparison
+                String appointmentStartString = appointment.getStart();
+                Timestamp appointmentStartTimestamp = Timestamp.valueOf(appointmentStartString);
+                LocalDateTime appointmentStartLocalDateTime = appointmentStartTimestamp.toLocalDateTime();
+                LocalDateTime appointmentStartPlusFifteenLocalDateTime = appointmentStartLocalDateTime.plus(15, ChronoUnit.MINUTES);
+
+                //if the start time is after now and now + 15 minutes is after start the appointment starting within 15 minutes
+                //thus a warning or notice should appear on the GUI
+                if(appointmentStartLocalDateTime.isAfter(now) && nowPlusFifteen.isAfter(appointmentStartLocalDateTime)) {
+                    errorTextArea.appendText("Appointment ID: " + appointment.getAppointment_ID() + " Is starting at: " + appointment.getStart());
+                }
             }
         }
     }
@@ -322,7 +329,7 @@ public class mainController implements Initializable {
     private void searchAppointmentTypeOrMonth(String searchInput) {
         try (var connection = connect.startConnection()) {
             ObservableList<appointmentModel> appointmentData;
-            appointmentData = appointmentTableData.getAppointmentData(connection);
+            appointmentData = getAppointmentData(connection);
             boolean itsInt;
             int intSearch = -1;
             String stringSearch = null;
@@ -358,7 +365,7 @@ public class mainController implements Initializable {
     private void searchAppointmentContactOrLocation(String searchInput) {
         try (var connection = connect.startConnection()) {
             ObservableList<appointmentModel> appointmentData;
-            appointmentData = appointmentTableData.getAppointmentData(connection);
+            appointmentData = getAppointmentData(connection);
             boolean itsInt;
             int intSearch = -1;
             String stringSearch = null;
@@ -432,7 +439,7 @@ public class mainController implements Initializable {
                 appointmentData = appointmentTableData.getAppointmentDataDateRange(connection, dateRange);
             //else provide all results
             } else {
-                appointmentData = appointmentTableData.getAppointmentData(connection);
+                appointmentData = getAppointmentData(connection);
             }
             customerTable.setPlaceholder(new Label("The table is empty or no search results found."));
             customerTable.setEditable(true);

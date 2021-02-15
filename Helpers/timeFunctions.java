@@ -165,7 +165,7 @@ public class timeFunctions {
         Date today = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(input);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        //return time in UTC time zone
+        //return time in UTC time zonekh
         return df.format(today);
     }
 
