@@ -14,7 +14,10 @@ import javax.sql.DataSource;
 public class DatabasewithDS {
 
 
-
+    /**This function connects to the database
+     *
+     * @param args a default parameter
+     */
     public static void main(String[] args) {
         DataSource ds = getMySQLDataSource();
 
@@ -33,6 +36,10 @@ public class DatabasewithDS {
         }
     }
 
+    /**This function will connect to th e database
+     *
+     * @return a MysqlDataSource
+     */
     public static MysqlDataSource getMySQLDataSource() {
         Properties props = new Properties();
         FileInputStream fis = null;

@@ -40,78 +40,97 @@ public class appointmentModel {
         this.End = end;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public static ObservableList<appointmentModel> getFilteredAppointments() {
         return filteredAppointments;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public String getAppointment_ID() {
         return Appointment_ID;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public void setAppointment_ID(String appointment_ID) {
         Appointment_ID = appointment_ID;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public String getCustomer_ID() {
         return Customer_ID;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public void setCustomer_ID(String customer_ID) {
         Customer_ID = customer_ID;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public String getTitle() {
         return Title;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public void setTitle(String title) {
         Title = title;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public String getDescription() {
         return Description;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public void setDescription(String description) {
         Description = description;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public String getLocation() {
         return Location;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public void setLocation(String location) {
         Location = location;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public String getContact_ID() {
         return Contact_ID;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public void setContact_ID(String contact_ID) {
         Contact_ID = contact_ID;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public String getType() {
         return Type;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public void setType(String type) {
         Type = type;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public String getStart() {
         return Start;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public void setStart(String start) {
         Start = start;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public String getEnd() {
         return End;
     }
 
+    /**This is an auto-generated getter or setter function*/
     public void setEnd(String end) {
         End = end;
     }

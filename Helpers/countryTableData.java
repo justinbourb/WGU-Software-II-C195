@@ -12,8 +12,8 @@ public class countryTableData {
     /** This function gets the names of all the countries and returns them
      * as an ArrayList.  Which can be used to populate the combo box menu."
      * @return data, an ArrayList of first level division names.
-     * @throws SQLException
-     * @param connection
+     * @throws SQLException an exception
+     * @param connection a Connection
      */
     public static ArrayList getCountryNames(Connection connection) throws SQLException {
         ArrayList data = new ArrayList<String>();

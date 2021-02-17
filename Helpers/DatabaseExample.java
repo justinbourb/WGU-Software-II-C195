@@ -12,6 +12,9 @@ public class DatabaseExample {
     private String dbUser = null;
     private String dbPass = null;
 
+    /**This function will connect to the database
+     *
+     */
     public static void startConnection() {
 
         //Connection String

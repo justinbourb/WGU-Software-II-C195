@@ -16,7 +16,7 @@ public class customerTableData {
     /**This function pulls the customer data from the database, creates a customerModel object and adds all
      * objects to an observableArrayList so the database data can be added to a tableView.
      * @return customerTableData, an observableArrayList
-     * @throws SQLException
+     * @throws SQLException an exception
      */
     public static ObservableList<customerModel> getCustomersData() throws SQLException {
         ObservableList<customerModel> customerTableData = FXCollections.observableArrayList();
@@ -42,6 +42,12 @@ public class customerTableData {
         return customerTableData;
     }
 
+    /**This function get the customer data from the database.
+     *
+     * @param connection a Connection
+     * @return the customer data as an ObservableList
+     * @throws SQLException an exception
+     */
     public static ObservableList<customerModel> getCustomersData(Connection connection) throws SQLException {
         ObservableList<customerModel> customerTableData = FXCollections.observableArrayList();
         String column = "*";
@@ -65,6 +71,13 @@ public class customerTableData {
         }
         return customerTableData;
     }
+
+    /**This function gets the customer name
+     *
+     * @param connection a Connection
+     * @return the customer names as an array
+     * @throws SQLException an exception
+     */
     public static ArrayList getCustomerNames(Connection connection) throws SQLException {
         ArrayList customerNameArrayList = new ArrayList();
         String column = "Customer_Name";
@@ -78,6 +91,11 @@ public class customerTableData {
         return customerNameArrayList;
     }
 
+    /**This function gets the customerID
+     *
+     * @param name the name used to find the ID
+     * @return the ID or null
+     */
     public static String getCustomerID(String name) {
         try(ResultSet results = read.readData("Customer_ID", "customers","Customer_Name = '" + name + "'")) {
             ;

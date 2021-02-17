@@ -11,10 +11,8 @@ public class create {
     * @param columns, the column(s) name as a string
     * @param table, the table as a string
     * @param values, the where as a string
-    * @exception SQLException, an SQL Exception
-    * @return results, a ResultsSet of the data found
     */
-    public static void createData(String table, String columns, String values) throws SQLException {
+    public static void createData(String table, String columns, String values) {
         /* example usage:
         INSERT INTO Customers (CustomerName, City, Country)
         VALUES ('Cardinal', 'Stavanger', 'Norway');
@@ -30,7 +28,15 @@ public class create {
         }
     }
 
-
+    /** This function creates data in the database
+     *
+     * @param table table
+     * @param columns column
+     * @param values values
+     * @param start start time
+     * @param end end time
+     * @throws SQLException an exception
+     */
     public static void createData(String table, String columns, String values, Timestamp start, Timestamp end) throws SQLException {
         /* example usage:
         INSERT INTO Customers (CustomerName, City, Country)

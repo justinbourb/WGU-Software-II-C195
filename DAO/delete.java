@@ -12,8 +12,7 @@ public class delete {
     /**This function deletes data from the database and returns the results as a ResultSet.
     * @param table, the table as a string
     * @param where, the where as a string
-    * @exception SQLException, an SQL Exception
-    * @return results, a ResultsSet of the data found
+    * @throws SQLException, an SQL Exception
     */
     public static void deleteData(String table, String where) throws SQLException {
         /* Example usage:

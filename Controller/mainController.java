@@ -4,7 +4,10 @@ package Controller;
 import DAO.connect;
 import DAO.delete;
 import DAO.update;
-import Helpers.*;
+import Helpers.appointmentTableData;
+import Helpers.confirmView;
+import Helpers.customerTableData;
+import Helpers.switchStage;
 import Model.appointmentModel;
 import Model.customerModel;
 import javafx.collections.FXCollections;
@@ -21,16 +24,17 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
 import static Helpers.appointmentTableData.getAppointmentData;
-import static Helpers.appointmentTableData.getAppointmentDataDateRange;
-import static Helpers.timeFunctions.*;
+import static Helpers.timeFunctions.getMonthFromDateTime;
 
 /** This class controls the mainView.fxml */
 public class mainController implements Initializable {
@@ -510,11 +514,37 @@ public class mainController implements Initializable {
 
                 try {
                     update.updateData(table, set, where);
-                } catch (SQLException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
     }
 
+    /**This function handles the contact report button and opens the related view
+     * @param actionEvent an actionEvent
+     * @throws IOException IOException an exception
+     */
+    public void contactReportButtonAction(ActionEvent actionEvent) throws IOException {
+        String resourceURL = "/View/contactReportView.fxml";
+        switchStage.switchStage(actionEvent, resourceURL);
+    }
+
+    /**This function handles the contact report button and opens the related view
+     * @param actionEvent an actionEvent
+     * @throws IOException IOException an exception
+     */
+    public void locationReportButtonAction(ActionEvent actionEvent) throws IOException {
+        String resourceURL = "/View/locationReportView.fxml";
+        switchStage.switchStage(actionEvent, resourceURL);
+    }
+
+    /**This function handles the contact report button and opens the related view
+     * @param actionEvent an actionEvent
+     * @throws IOException IOException an exception
+     */
+    public void appointmentReportButtonAction(ActionEvent actionEvent) throws IOException {
+        String resourceURL = "/View/appointmentReportView.fxml";
+        switchStage.switchStage(actionEvent, resourceURL);
+    }
 }

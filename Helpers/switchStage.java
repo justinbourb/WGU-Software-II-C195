@@ -16,6 +16,7 @@ public class switchStage {
     /** This class will setup and show a new Stage (GUI Screen) after a button click.
     *@param event, a ActionEvent provided by a button click
     *@param resourceURL, a string pointing to a .fxml file
+    *@throws IOException an exception
     */
     @FXML
     public static void switchStage(ActionEvent event, String resourceURL) throws IOException {

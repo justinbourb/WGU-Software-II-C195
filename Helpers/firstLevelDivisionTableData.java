@@ -19,7 +19,7 @@ public class firstLevelDivisionTableData {
     /**This function pulls the first level division data from the database, creates a firstLevelDivisionModel object and adds all
      * objects to an observableArrayList so the database data can be added to a tableView.
      * @return firstLevelDivisionTableData, an observableArrayList
-     * @throws SQLException
+     * @throws SQLException an exception
      */
     public static ObservableList<firstLevelDivisionModel> getFirstLevelDivisionData() throws SQLException {
         ObservableList<firstLevelDivisionModel> firstLevelDivsionTableData = FXCollections.observableArrayList();
@@ -40,8 +40,10 @@ public class firstLevelDivisionTableData {
     /** This function gets the names of all the first level divisions
      *  for a specific country and returns them
      * as an ArrayList.  Which can be used to populate the combo box menu."
+     * @param connection a Connection
+     * @param  country_ID a string
      * @return data, an ArrayList of first level division names.
-     * @throws SQLException
+     * @throws SQLException an exception
      */
     public static ArrayList getFirstLevelDivisionNames(Connection connection, String country_ID) throws SQLException {
         ArrayList data = new ArrayList<String>();
@@ -57,6 +59,12 @@ public class firstLevelDivisionTableData {
         return data;
     }
 
+    /** This function returns the firstLevelDivisionID from the provided String name
+     *
+     * @param name a String
+     * @return the ID
+     * @throws SQLException an exception
+     */
     public static String getFirstLevelDivisionID(String name) throws SQLException {
         String returnValue = null;
         String column = "*";

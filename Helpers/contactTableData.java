@@ -13,6 +13,7 @@ public class contactTableData {
     /** This function returns an arraylist of contact names from the database
      * @param connection, a Connection
      * @return contactNameArrayList, an array list of names
+     * @throws SQLException an exception
      */
     public static ArrayList getContactNames(Connection connection) throws SQLException {
         ArrayList contactNameArrayList = new ArrayList();
@@ -31,9 +32,8 @@ public class contactTableData {
      *
      * @param name, String a contact name
      * @return customer id or null
-     * @throws SQLException, an Exception
      */
-    public static String getContactID(String name) throws SQLException {
+    public static String getContactID(String name) {
         try(ResultSet results = read.readData("Contact_ID", "contacts","Contact_Name = '" + name + "'")) {
             ;
             if (results.next()) {

@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="756.0" prefWidth="940.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.mainController">
+<VBox prefHeight="771.0" prefWidth="940.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.mainController">
   <children>
-    <AnchorPane fx:id="mainAnchorPage" maxHeight="-1.0" maxWidth="-1.0" prefHeight="575.0" prefWidth="940.0" VBox.vgrow="ALWAYS">
+    <AnchorPane fx:id="mainAnchorPage" maxHeight="-1.0" maxWidth="-1.0" prefHeight="772.0" prefWidth="940.0" VBox.vgrow="ALWAYS">
       <children>
             <AnchorPane fx:id="customerAnchorPage" layoutX="11.0" layoutY="68.0" prefHeight="306.0" prefWidth="918.0" style="-fx-border-style: solid; -fx-border-radius: 20;">
                <children>
@@ -50,7 +50,6 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="appointmentsSearchTypeOrMonthText" layoutX="747.0" layoutY="25.0" onKeyReleased="#onKeyReleasedAppointmentSearchTypeOrMonthText" prefHeight="25.0" prefWidth="157.0" promptText="Search Appt_ID or Type" />
                   <TableView fx:id="appointmentTable" layoutX="13.0" layoutY="57.0" prefHeight="196.0" prefWidth="893.0">
                      <columns>
                         <TableColumn fx:id="appointmentIDTableColumn" prefWidth="28.0" text="ID" />
@@ -74,9 +73,9 @@
                   </RadioButton>
                   <RadioButton fx:id="thirtyDaysToggleButton" layoutX="258.0" layoutY="29.0" mnemonicParsing="false" onAction="#radioButtonHandler" text="30 Days View" toggleGroup="$appointmentViewToggle" />
                   <RadioButton fx:id="threeHundredSixtyFiveDaysToggleButton" layoutX="362.0" layoutY="29.0" mnemonicParsing="false" onAction="#radioButtonHandler" selected="true" text="365 Days View" toggleGroup="$appointmentViewToggle" />
-                  <Label layoutX="730.0" layoutY="6.0" text="Search Appointment Type or Month" />
-                  <TextField fx:id="appointmentsSearchContactOrLocationText" layoutX="526.0" layoutY="26.0" onKeyReleased="#onKeyReleasedAppointmentSearchContactOrLocationText" prefHeight="25.0" prefWidth="157.0" promptText="Search Contact ID or Location" />
-                  <Label layoutX="526.0" layoutY="6.0" text="Search Contact ID or Location" />
+                  <Button fx:id="contactReportButton" layoutX="27.0" layoutY="267.0" mnemonicParsing="false" onAction="#contactReportButtonAction" text="Contact Report" />
+                  <Button fx:id="locationReportButton" layoutX="135.0" layoutY="267.0" mnemonicParsing="false" onAction="#locationReportButtonAction" text="Location Report" />
+                  <Button fx:id="appointmentReportButton" layoutX="247.0" layoutY="267.0" mnemonicParsing="false" onAction="#appointmentReportButtonAction" text="Appointment Type &amp; Month Report" />
                </children>
             </AnchorPane>
             <Button fx:id="logoutButton" layoutX="844.0" layoutY="27.0" mnemonicParsing="false" onAction="#logoutButtonAction" text="Log out" />

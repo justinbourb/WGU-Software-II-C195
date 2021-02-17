@@ -46,6 +46,13 @@ public class appointmentTableData {
         }
         return appointmentTableData;
     }
+
+    /**This functions get the appointment data from the database
+     *
+     * @param connection a Connetion
+     * @return the appointment data
+     * @throws SQLException an exception
+     */
     public static ObservableList<appointmentModel> getAppointmentData(Connection connection) throws SQLException {
         ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();
         String column = "*";
@@ -75,6 +82,15 @@ public class appointmentTableData {
         }
         return appointmentTableData;
     }
+
+    /**This functions get the appointment data from the database based on date range
+     *
+     * @param connection a Connection
+     * @param dateRange a date range
+     * @return the appointment data
+     * @throws SQLException an exception
+     * @throws ParseException an exception
+     */
     public static ObservableList<appointmentModel> getAppointmentDataDateRange(Connection connection, Integer dateRange) throws SQLException, ParseException {
         ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();
         String column = "*";
@@ -108,6 +124,16 @@ public class appointmentTableData {
         return appointmentTableData;
     }
 
+
+    /**this function get the appointment data from the database based on date range
+     *
+     * @param before the starting Timestamp
+     * @param after the ending Timestamp
+     * @param connection a Connection
+     * @return the appoint data as an ObservableList
+     * @throws SQLException an exception
+     * @throws ParseException an exception
+     */
     public static ObservableList<appointmentModel> getAppointmentDataDateRange(Timestamp before, Timestamp after, Connection connection) throws SQLException, ParseException {
         ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();
         String column = "*";
@@ -137,6 +163,16 @@ public class appointmentTableData {
         return appointmentTableData;
     }
 
+    /** This function gets the appoint data by a given Date range
+     *
+     * @param before the starting Timestamp
+     * @param after the ending Timestamp
+     * @param connection a Connection
+     * @param appointment_ID the appointment ID
+     * @return the appoint data as an ObservableList
+     * @throws SQLException an exception
+     * @throws ParseException an exception
+     */
     public static ObservableList<appointmentModel> getAppointmentDataDateRange(Timestamp before, Timestamp after, Connection connection, String appointment_ID) throws SQLException, ParseException {
         ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();
         String column = "*";

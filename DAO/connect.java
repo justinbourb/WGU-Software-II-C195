@@ -27,6 +27,7 @@ public class connect {
     private static Connection connection = null;
     private static final String username = "U06rpB";
     private static final String password = "53688851020";
+    /**an ArrayList of all Connections*/
     public static ArrayList<Connection> allConnections = new ArrayList();
 
     /**This function starts the database connection.

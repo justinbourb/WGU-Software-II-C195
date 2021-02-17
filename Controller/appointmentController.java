@@ -18,7 +18,10 @@ import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,7 +31,6 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static Helpers.appointmentTableData.checkOverlappingAppointmentsDatabaseLogic;
-import static Helpers.appointmentTableData.getAppointmentDataDateRange;
 import static Helpers.timeFunctions.*;
 
 /** This class handles the appointment Model */

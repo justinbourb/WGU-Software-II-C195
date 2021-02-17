@@ -11,9 +11,8 @@ public class update {
     * @param table, the table as a string
     * @param set, the data to set
     * @param where, the where as a string
-    * @exception SQLException, an SQL Exception
     */
-    public static void updateData(String table, String set, String where) throws SQLException {
+    public static void updateData(String table, String set, String where) {
         /* Example usage:
         UPDATE Customers
         SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
@@ -29,7 +28,15 @@ public class update {
         }
     }
 
-    public static void updateDataTimestamp(String table, String set, String where, Timestamp start, Timestamp end) throws SQLException {
+    /**This functions updates the timestamp
+     *
+     * @param table database table
+     * @param set info to set in database
+     * @param where where to set
+     * @param start start time
+     * @param end end time
+     */
+    public static void updateDataTimestamp(String table, String set, String where, Timestamp start, Timestamp end) {
         /* Example usage:
         UPDATE Customers
         SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'

@@ -22,11 +22,13 @@ public class timeFunctions {
         return nowUTC.get().format(formatter);
     }
 
-    /**
-     * This is a functional interface for a Supplier
+    /**This is a functional interface for a Supplier
+     *
+     * @param <T> a functional interface
      */
     @FunctionalInterface
     public interface Supplier<T> {
+        /**This is a functional interface for a Supplier*/
         T get();
     }
 
@@ -92,7 +94,6 @@ public class timeFunctions {
      * zone to it's previous setting.
      * @param inputTimestamp, a Timestamp from the database in UTC time
      * @return the DateTime converted to local time
-     * @throws ParseException, an exception
      */
 
     public static String getLocalTimeZoneString(Timestamp inputTimestamp) {
@@ -126,12 +127,22 @@ public class timeFunctions {
         return dateTimeFormatter.format(localLocalDateTime);
     }
 
+    /**This function returns a String from a Timestamp
+     *
+     * @param inputTimestamp Timestamp
+     * @return a string
+     */
     public static String getTimeString(Timestamp inputTimestamp) {
         LocalDateTime localLocalDateTime = inputTimestamp.toLocalDateTime();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         return dateTimeFormatter.format(localLocalDateTime);
     }
 
+    /**This function returns a LocalDateTime from a Timestamp
+     *
+     * @param inputTimestamp a Timestamp
+     * @return a LocalDateTime
+     */
     public static LocalDateTime getLocalTimeZoneLocalDateTime(Timestamp inputTimestamp) {
         //convert timestamp into LocalDateTime object
         LocalDateTime utcLocalDateTime = inputTimestamp.toLocalDateTime();
@@ -151,12 +162,16 @@ public class timeFunctions {
         return userLocalDateTime;
     }
 
+    /**This function returns a LocalDateTime from a Timestamp
+     *
+     * @param inputTimestamp a Timestamp
+     * @return a LocalDateTime
+     */
     public static LocalDateTime getLocalDateTimeFromTimeStamp(Timestamp inputTimestamp) {
         return inputTimestamp.toLocalDateTime();
     }
 
     /** This function converts a local DateTime into UTC DateTime
-     *
      * @param input, a local DateTime String
      * @return a UTC DateTime String
      * @throws ParseException, an exception
@@ -169,6 +184,11 @@ public class timeFunctions {
         return df.format(today);
     }
 
+    /**This function returns a localDateTime from a String input
+     *
+     * @param input a string
+     * @return a LocalDateTime
+     */
     public static LocalDateTime getLocalDateTimeFromString(String input){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -207,6 +227,11 @@ public class timeFunctions {
         return Timestamp.valueOf(utcDateTime);
     }
 
+    /** This function returns a Timestamp from a LocalDateTime
+     *
+     * @param input as LocalDateTime
+     * @return a Timestamp
+     */
     public static Timestamp getUTCTimestampFromLocalDateTime(LocalDateTime input){
         LocalDateTime utcLocalDateTime = getUTCLocalDateTimeFromLocalDateTime(input);
         return Timestamp.valueOf(utcLocalDateTime);

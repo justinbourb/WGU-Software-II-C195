@@ -53,6 +53,7 @@ public class fileFunctions {
     /**
      * This function will append data to a file
      * @param path, a Path path to the file to append to.
+     * @param textToAppend a String
      */
     public static void newBufferedWriter(Path path, String textToAppend) {
         try (var writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
