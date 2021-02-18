@@ -11,8 +11,11 @@ import java.util.TimeZone;
 
 /**This class contains functions related to time.*/
 public class timeFunctions {
-    /**This function captures the time in the local format of the user and UTC time
-     * @return returnValue, a UTC time in String format*/
+/** <p>This function captures the time in the local format of the user and UTC time.
+ This function contains one of the lambda expressions (->) required by the assignment.
+ Lambda expressions are beneficial in reducing the number of lines of code.</p>
+ * @return returnValue, a UTC time in String format
+ */
     public static String localDateNow() {
         //Lambda expressions are beneficial in reducing the number of lines of code.
         //sets nowUTC to UTC time

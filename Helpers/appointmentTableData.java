@@ -223,7 +223,17 @@ public class appointmentTableData {
         String column = "*";
         String table = "appointments";
         String where = "Appointment_ID != " + appointment_ID;
-        ResultSet results = read.readData(column, table, where, connection);
+        ResultSet results;
+        //if creating a new appointment, it will not have an appointment_ID assigned yet
+        //thus querying a blank id creates an sql exception
+        if (appointment_ID.isEmpty()){
+            results = read.readData(column, table, connection);
+            //if there is an appointment ID we should not consider the same appointment as an overlap
+            //thus our database query excludes the appointment being modified
+        } else {
+            results = read.readData(column, table, where, connection);
+        }
+
         LocalDateTime startTimeToCheckLocalDateTime = before.toLocalDateTime();
         LocalDateTime endTimeToCheckLocalDateTime = after.toLocalDateTime();
 

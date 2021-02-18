@@ -8,7 +8,9 @@ import java.util.Optional;
 /** This class shows a confirm button in the GUI.*/
 public class confirmView {
   
-  /** This function shows a confirm button in the GUI.
+  /** This function shows a confirm button in the GUI.  This function contains
+   * one of the required lambda expressions (->) for the assignment.
+   * Functional programming with lambda expressions is more efficient.
   *@param confirmText, a string containing confirmation text to display
   *@return true if ok button is selected, false if not
   */

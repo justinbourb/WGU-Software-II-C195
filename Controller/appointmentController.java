@@ -324,11 +324,6 @@ public class appointmentController implements Initializable {
         }
         String endTime = endHours + ":" + endMin;
 
-        /*
-        This is where I suspect something is wrong.
-         */
-//        Timestamp startTimeStamp = getUTCTimestampFromString(startDate + " " + startTime);
-//        Timestamp endTimeStamp = getUTCTimestampFromString(endDate + " " + endTime);
         LocalDateTime startLocalDateTime = getLocalDateTimeFromString(startDate + " " + startTime);
         Timestamp startTimeStamp = Timestamp.valueOf(startLocalDateTime);
         LocalDateTime endLocalDateTime = getLocalDateTimeFromString(endDate + " " + endTime);
