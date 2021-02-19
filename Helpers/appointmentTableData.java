@@ -219,7 +219,7 @@ public class appointmentTableData {
      * @throws SQLException an exception
      */
     public static ObservableList<appointmentModel> checkOverlappingAppointmentsDatabaseLogic(Timestamp before, Timestamp after, Connection connection, String appointment_ID) throws SQLException{
-        ObservableList<appointmentModel> appointmentTableData = FXCollections.observableArrayList();
+        ObservableList<appointmentModel> overlappingAppointmentTableData = FXCollections.observableArrayList();
         String column = "*";
         String table = "appointments";
         String where = "Appointment_ID != " + appointment_ID;
@@ -256,17 +256,20 @@ public class appointmentTableData {
             //convert to string for appointment object
             String endString = getTimeString(End);
 
-            //check if an appointment is within the time range of an existing appointment  (first two or statements)
-            //check if an existing appointments are within the appointment to check (third or statement)
-            //if so, add the appointment to the results (appointmentTableData)
+            //1. check if an appointment is within the time range of an existing appointment  (first two or statements)
+            //2. check if an existing appointments are within the appointment to check (third or statement)
+            //3. check if an existing appointment starts and ends at the exact same time (fourth and fifth statement)
+            //if so the appointment overlaps, add the overlap to the results (overlappingAppointmentTableData)
             if (startTimeToCheckLocalDateTime.isAfter(dbStartLocalDateTime) && startTimeToCheckLocalDateTime.isBefore(dbEndLocalDateTime) ||
                     (endTimeToCheckLocalDateTime.isAfter(dbStartLocalDateTime) && endTimeToCheckLocalDateTime.isBefore(dbEndLocalDateTime)) ||
-                    (dbStartLocalDateTime.isAfter(startTimeToCheckLocalDateTime) && dbStartLocalDateTime.isBefore(endTimeToCheckLocalDateTime))){
+                    (dbStartLocalDateTime.isAfter(startTimeToCheckLocalDateTime) && dbStartLocalDateTime.isBefore(endTimeToCheckLocalDateTime)) ||
+                    (dbStartLocalDateTime.equals(startTimeToCheckLocalDateTime) || dbStartLocalDateTime.equals(endTimeToCheckLocalDateTime)) ||
+                    (dbEndLocalDateTime.equals(endTimeToCheckLocalDateTime) || dbEndLocalDateTime.equals(startTimeToCheckLocalDateTime))){
                 appointmentModel appointment = new appointmentModel(Appointment_ID, Customer_ID, Title, Description, Location, Contact_ID, Type, startString, endString);
-                appointmentTableData.add(appointment);
+                overlappingAppointmentTableData.add(appointment);
             }
 
         }
-        return appointmentTableData;
+        return overlappingAppointmentTableData;
     }
 }
