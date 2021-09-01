@@ -40,3 +40,11 @@ Made with:
 2. Goto File -> Project Structure -> Libraries -> click the + to add a new library  
     a. Select Java -> Browse to your database connector file -> select the jar file  
     b. Press ok and apply. The connector should be listed as an external library. 
+## Usage
+Open IntelliJ, load the porject folder and run mainLauncher.java.  Note, firewalls or VPN services may interfere with connecting to the database.  Upon loading the application users are promted to log in in French or English based on their windows settings.  
+<img src="https://github.com/justinbourb/WGU-Software-II-C195/blob/main/images/login.JPG">  
+Successful login loads the main dashboard. Where existing customers and appointments can be viewed.  
+<img src="https://github.com/justinbourb/WGU-Software-II-C195/blob/main/images/main_dashboard.JPG">  
+Customers and Appointments can be added, edited or deleted.  Table data can be filtered via the search field.  All appointments are stored in UTC and converted into the users timezone, based on their windows settings.  Overlapping appointments are not allowed.  Customers can be added from the USA, Canada or UK.  
+<img src="https://github.com/justinbourb/WGU-Software-II-C195/blob/main/images/edit_customers.jpg">  
+<img src="https://github.com/justinbourb/WGU-Software-II-C195/blob/main/images/edit_appointments.JPG">
